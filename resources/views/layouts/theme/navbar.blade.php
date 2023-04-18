@@ -11,7 +11,7 @@
             </svg></a>
 
         <div class="nav-logo align-self-center">
-            <a class="navbar-brand" href="index.html"><img alt="logo" src="assets/img/90x90.jpg"> <span
+            <a class="navbar-brand" href="index.html"><img alt="logo" src="assets/img/LogoBebe90x90.png"> <span
                     class="navbar-brand-name">Hiper Pañal - POS</span></a>
         </div>
 
@@ -23,15 +23,26 @@
                         <div class="media-body align-self-center">
                             <h6>Felipe López</h6>
                             <p>Administrador</p>
-                        </div>
-                        <img src="assets/img/90x90.jpg" class="img-fluid" alt="admin-profile">
-                        <span class="badge badge-success"></span>
+                        </div>                        
+                        <i class="far fa-user px-2" style="color: #ffffff;"></i>
+                        <span class="badge badge-success"></span>                        
                     </div>
                 </a>
 
                 <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
                     <div class="dropdown-item">
-                        <a href="auth_login.html">
+                        <a href="user_profile.html">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-user">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg> <span>Perfil</span>
+                        </a>
+                    </div>
+                    <div class="dropdown-item">
+                        <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-log-out">
@@ -40,6 +51,9 @@
                                 <line x1="21" y1="12" x2="9" y2="12"></line>
                             </svg> <span>Salir</span>
                         </a>
+                        <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                            @csrf
+                        </form>
                     </div>
                 </div>
             </li>
