@@ -1,55 +1,52 @@
-<div class="row sales layout-top-spacing">
-
-    <div class="col-sm-12">
-        <div class="widget widget-chart-one">
-            <div class="widget-heading">
-                <h4 class="card-title">
-                    <b>ComponentName | PageTitle</b>
-                </h4>
-                <ul class="tabs tap-pills">
-                    <li>
-                        <a href="javascript:void(0)" class="tapmenu bg-dark" data-toggle="modal" data-target="#theModal">Agregar</a>
-                    </li>
-                </ul>
-            </div>
-            Search
-            <div class="widget-content">
+<div class="page-header">
+    <div class="page-title">
+        <h3>nombreComponente | tituloPagina</h3>
+    </div>
+    <div>
+        <a href="javascript:void(0)" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#theModal"> >
+            Agregar
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area">
                 <div class="table-responsive">
-                    <table class="table table-bordered table striped mt-1">
-                        <thead class="text-white" style="background: #3b3f5c;">
+                    <div class="mt-2 mb-4">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar">
+                    </div>
+                    <table class="table table-bordered mb-4">
+                        <thead>
                             <tr>
-                                <th class="table-th text-white">DESCRIPCIÓN</th>
-                                <th class="table-th text-white">IMAGEN</th>
-                                <th class="table-th text-white">ACTIONS</th>
+                                <th>Nombre</th>
+                                <th class="text-center">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
-                                    <h6>Category Name</h6>
-                                </td>
+                                <td>Perfumeria</td>
+
                                 <td class="text-center">
-                                    <span>
-                                        <img src="" alt="imagen de ejemplo" height="70" width="80" class="rounded">
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" title="Edit">
-                                        <i class="fas fa-edit"></i>
+
+                                    <a href="javascript:void(0)" class="btn btn-warning">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
                                     </a>
-                                    <a href="javascript:void(0)" class="btn btn-dark" title="Delete">
-                                        <i class="fas fa-trash"></i>
+                                    <a href="javascript:void(0)" class="btn btn-danger">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
                                     </a>
+
+
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    pagination
+                    paginacion
                 </div>
             </div>
         </div>
     </div>
-    include form
+    incluye modal
 </div>
 <script>
     document.addEventListener('DOMContetLoaded', function() {});

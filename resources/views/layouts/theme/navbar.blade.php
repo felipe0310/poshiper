@@ -1,4 +1,4 @@
-<div class="header-container">
+<div class="header-container header-navbar">
     <header class="header navbar navbar-expand-sm">
 
         <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom"><svg
@@ -11,7 +11,7 @@
             </svg></a>
 
         <div class="nav-logo align-self-center">
-            <a class="navbar-brand" href="index.html"><img alt="logo" src="assets/img/LogoBebe90x90.png"> <span
+            <a class="navbar-brand" href="#"><img alt="logo" src="assets/img/LogoBebe90x90.png"> <span
                     class="navbar-brand-name">Hiper Pañal - POS</span></a>
         </div>
 
@@ -24,7 +24,7 @@
                             <h6>Felipe López</h6>
                             <p>Administrador</p>
                         </div>                        
-                        <i class="far fa-user px-2" style="color: #ffffff;"></i>
+                        <i class="far fa-user px-2" style="color: #ebe3e3;"></i>
                         <span class="badge badge-success"></span>                        
                     </div>
                 </a>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Livewire\Productos;
+use App\Http\livewire\Categorias;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +22,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('categorias', Categorias::class);
+Route::get('productos', Productos::class);
