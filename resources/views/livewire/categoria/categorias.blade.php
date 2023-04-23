@@ -53,17 +53,17 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('categoria-added', msg => {
+        window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
             noty(msg)
         })
 
-        window.livewire.on('categoria-updated', msg => {
+        window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
             noty(msg)
         })
 
-        window.livewire.on('categoria-delete', msg => {
+        window.livewire.on('item-delete', msg => {
             noty(msg)
         })
 
@@ -76,7 +76,7 @@
             $('#theModal').modal('show')
         })
 
-        window.livewire.on('hidden.bs.modal', msg => {
+        $('#theModal').on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none');
         })
 

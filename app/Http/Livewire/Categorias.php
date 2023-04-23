@@ -61,7 +61,7 @@ class Categorias extends Component
         ]);
 
         $this->resetUI();
-        $this->emit('categoria-added', 'Categoria Registrada');
+        $this->emit('item-added', 'Categoria Registrada');
     }
 
     public function Update()
@@ -72,7 +72,7 @@ class Categorias extends Component
             'nombre' => $this->nombre
         ]);
         $this->resetUI();
-        $this->emit('categoria-updated', 'Categoria Actualizada');
+        $this->emit('item-updated', 'Categoria Actualizada');
 
     }
 
@@ -81,7 +81,7 @@ class Categorias extends Component
         //$categoria = Categoria::find($id);
         $categoria->delete();
         $this->resetUI();
-        $this->emit('categoria-delete', 'Categoria Eliminada');
+        $this->emit('item-delete', 'Categoria Eliminada');
 
     }
 

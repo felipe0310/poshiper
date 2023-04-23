@@ -19,13 +19,13 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Código de Barras</th>
-                                    <th>Precio Compra</th>
-                                    <th>Precio Venta</th>
-                                    <th>Precio Mayoreo</th>
-                                    <th>Precio Oferta</th>
-                                    <th>Categoria</th>
-                                    <th>Stock</th>
+                                    <th class="text-center">Código de Barras</th>
+                                    <th class="text-center">Precio Compra</th>
+                                    <th class="text-center">Precio Venta</th>
+                                    <th class="text-center">Precio Mayoreo</th>
+                                    <th class="text-center">Precio Oferta</th>
+                                    <th class="text-center">Categoria</th>
+                                    <th class="text-center">Stock</th>
 
                                     <th class="text-center">Acción</th>
                                 </tr>
@@ -35,11 +35,11 @@
                                     <tr>
                                         <td>{{ $producto->descripcion }}</td>
                                         <td>{{ $producto->codigo_barras }}</td>
-                                        <td>{{ $producto->precio_compra }}</td>
-                                        <td>{{ $producto->precio_venta }}</td>
-                                        <td>{{ $producto->precio_mayoreo }}</td>
-                                        <td>{{ $producto->precio_oferta }}</td>
-                                        <td>{{ $producto->categoria_id}}</td>
+                                        <td>${{number_format($producto->precio_compra,0,",",".")}}</td>
+                                        <td>${{number_format( $producto->precio_venta,0,",",".") }}</td>
+                                        <td>${{number_format( $producto->precio_mayoreo,0,",",".") }}</td>
+                                        <td>${{number_format( $producto->precio_oferta,0,",",".") }}</td>
+                                        <td>{{ $producto->categorias}}</td>
                                         <td>0</td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
@@ -68,30 +68,26 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('categoria-added', msg => {
+        window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
             noty(msg)
         })
 
-        window.livewire.on('categoria-updated', msg => {
+        window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
             noty(msg)
         })
 
-        window.livewire.on('categoria-delete', msg => {
+        window.livewire.on('item-delete', msg => {
             noty(msg)
         })
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
             noty(msg)
-        })
+        })        
 
-        window.livewire.on('show-modal', msg => {
-            $('#theModal').modal('show')
-        })
-
-        window.livewire.on('hidden.bs.modal', msg => {
+        $('#theModal').on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none');
         })
 
@@ -99,7 +95,7 @@
 
     function Confirm(id, productos) {
         if (productos > 0) {
-            swal('NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENE PRODUCTOS RELACIONADOS')
+            swal('NO SE PUEDE ELIMINAR El PRODUCTO PORQUE TIENE STOCK DISPONIBLE')
             return;
         }
         swal({
