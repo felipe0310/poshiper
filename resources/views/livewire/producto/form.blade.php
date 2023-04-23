@@ -11,7 +11,7 @@
             <span class="text-danger er">{{ $message }}</span>
         @enderror
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-lg-6">
         <div class="mb-2 mt-2">
             <span><strong>Codigo de Barras</strong></span>
         </div>
@@ -24,6 +24,20 @@
     </div>
     <div class="col-sm-12 col-lg-6">
         <div class="mb-2 mt-2">
+            <span><strong>Categoria</strong></span>
+        </div>
+        <select class="custom-select col-12" wire:model="categoria_id">
+            <option selected>Seleccione la categoria</option>
+            @foreach ($categorias as $categoria)
+                <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+            @endforeach
+        </select>
+        @error('categoria_id')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="mb-2 mt-2">
             <span><strong>Precio de Compra</strong></span>
         </div>
         <div class="input-group">
@@ -31,6 +45,20 @@
         </div>
         @error('precio_compra')
             <span class="text-danger er">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="mb-2 mt-2">
+            <span><strong>Proveedor</strong></span>
+        </div>
+        <select class="custom-select col-12" wire:model="categoria_id">
+            <option selected>Seleccione el Proveedor</option>
+            @foreach ($categorias as $categoria)
+                <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+            @endforeach
+        </select>
+        @error('categoria_id')
+            <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-sm-12 col-lg-6">
@@ -66,22 +94,5 @@
             <span class="text-danger er">{{ $message }}</span>
         @enderror
     </div>
-    <div class="col-sm-12">
-        <div class="mb-2 mt-2">
-            <span><strong>Categoria</strong></span>
-        </div>
-        <select class="custom-select col-12" wire:model="categoria_id">
-            <option selected>Seleccione la categoria</option>
-            @foreach ($categorias as $categoria)
-                <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-            @endforeach
-        </select>
-        @error('categoria_id')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>
 </div>
-
 @include('common.modalFooter')
-
-

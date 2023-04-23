@@ -26,6 +26,7 @@
                                     <th class="text-center">Precio Oferta</th>
                                     <th class="text-center">Categoria</th>
                                     <th class="text-center">Stock</th>
+                                    
 
                                     <th class="text-center">Acción</th>
                                 </tr>
@@ -41,6 +42,7 @@
                                         <td>${{number_format( $producto->precio_oferta,0,",",".") }}</td>
                                         <td>{{ $producto->categorias}}</td>
                                         <td>0</td>
+                                        
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
                                                 wire:click="Edit('{{ $producto->id }}')" title="Editar">
