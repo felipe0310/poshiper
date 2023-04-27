@@ -18,38 +18,30 @@
                         <table class="table table-bordered mb-4">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Código de Barras</th>
-                                    <th>Precio Compra</th>
-                                    <th>Precio Venta</th>
-                                    <th>Precio Mayoreo</th>
-                                    <th>Precio Oferta</th>
-                                    <th>Categoria</th>
-                                    <th>Stock</th>
-                                    
-
+                                    <th>Rut Empresa</th>
+                                    <th>Descripción</th>
+                                    <th>Ubicación</th>
+                                    <th>Entrada</th>
+                                    <th>Salida</th>
                                     <th class="text-center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($productos as $producto)
+                                @foreach ($almacenes as $almacen)
                                     <tr>
-                                        <td>{{ $producto->descripcion }}</td>
-                                        <td>{{ $producto->codigo_barras }}</td>
-                                        <td>${{number_format($producto->precio_compra,0,",",".")}}</td>
-                                        <td>${{number_format( $producto->precio_venta,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_mayoreo,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_oferta,0,",",".") }}</td>
-                                        <td>{{ $producto->categorias}}</td>
-                                        <td>0</td>
+                                        <td>{{ $almacen->empresas}}</td>
+                                        <td>{{ $almacen->descripcion }}</td>                                        
+                                        <td>{{ $almacen->ubicacion}}</td>
+                                        <td>{{ $almacen->entrada}}</td>
+                                        <td>{{ $almacen->salida}}</td>
                                         
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
-                                                wire:click="Edit('{{ $producto->id }}')" title="Editar">
+                                                wire:click="Edit('{{ $almacen->id }}')" title="Editar">
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $producto->id }}')"
+                                                onclick="Confirm('{{ $almacen->id }}')"
                                                 title="Eliminar">
                                                 <i class="fas fa-trash" aria-hidden="true"></i>
                                             </a>
@@ -58,12 +50,12 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $productos->links() }}
+                        {{ $almacenes->links() }}
                     </div>
                 </div>
             </div>
         </div>
-        @include('livewire.producto.form')
+        @include('livewire.almacen.form')
     </div>
 </div>
 
@@ -87,7 +79,7 @@
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
             noty(msg)
-        })        
+        })
 
         window.livewire.on('show-modal', msg => {
             $('#theModal').modal('show')
@@ -99,9 +91,9 @@
 
     });
 
-    function Confirm(id, productos) {
-        if (productos > 0) {
-            swal('NO SE PUEDE ELIMINAR El PRODUCTO PORQUE TIENE STOCK DISPONIBLE')
+    function Confirm(id) {
+        if (id == 1) {
+            swal('NO SE PUEDE ELIMINAR El ALMACEN PRINCIPAL')
             return;
         }
         swal({

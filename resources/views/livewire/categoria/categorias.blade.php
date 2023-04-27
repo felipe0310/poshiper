@@ -76,7 +76,7 @@
             $('#theModal').modal('show')
         })
 
-        $('#theModal').on('hidden.bs.modal', function(e) {
+        $('#theModal').on('hidden.modal', function(e) {
             $('.er').css('display', 'none');
         })
 
