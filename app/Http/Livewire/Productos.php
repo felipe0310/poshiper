@@ -183,6 +183,7 @@ class Productos extends Component
        $this->precio_venta = "0";
        $this->precio_mayoreo = "0";
        $this->precio_oferta = "0";
+       $this->buscar = " ";
        $this->seleccionar_id = 0;       
         
     }

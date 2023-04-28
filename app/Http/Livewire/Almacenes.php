@@ -20,7 +20,7 @@ class Almacenes extends Component
      protected $rules =
     [
         'empresa_id' => 'required',
-        'descripcion' => 'required',
+        'descripcion' => 'required|unique:almacenes,descripcion',
         'ubicacion' => 'required',
         'entrada' => 'required',
         'salida' => 'required'
@@ -28,7 +28,8 @@ class Almacenes extends Component
 
     protected $messages = [
         'empresa_id.required' => 'La empresa es requerida.',
-        'descripcion.required' => 'La descripcion es requerida.',        
+        'descripcion.required' => 'La descripcion es requerida.',
+        'descripcion.unique' => 'La descripcion ya existe.',         
         'ubicacion.required' => 'La ubicación es requerida.',
         'entrada.required' => 'La hora de entrada en requerida',
         'salida.required' => 'La hora de salida en requerida',        
@@ -98,8 +99,26 @@ class Almacenes extends Component
     }
 
     public function Update()
-    {                          
-        $this->validate();
+    {           
+        $rules =
+    [
+        'empresa_id' => 'required',
+        'descripcion' => "required|unique:almacenes,descripcion,{$this->seleccionar_id}",
+        'ubicacion' => 'required',
+        'entrada' => 'required',
+        'salida' => 'required'
+    ];
+
+        $messages = [
+        'empresa_id.required' => 'La empresa es requerida.',
+        'descripcion.required' => 'La descripcion es requerida.',
+        'descripcion.unique' => 'La descripcion ya existe.',          
+        'ubicacion.required' => 'La ubicación es requerida.',
+        'entrada.required' => 'La hora de entrada en requerida',
+        'salida.required' => 'La hora de salida en requerida',        
+    ];
+
+        $this->validate($rules,$messages);
         $almacen = Almacen::find($this->seleccionar_id);
         $almacen->update([
             'empresa_id' => $this->empresa_id,

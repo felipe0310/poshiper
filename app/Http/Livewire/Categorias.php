@@ -66,7 +66,17 @@ class Categorias extends Component
 
     public function Update()
     {
-        $this->validate();
+        $rules = [
+            'nombre' => "required|unique:categorias,nombre,{$this->seleccionar_id}|min:3"
+        ];
+
+        $messages = [
+            'nombre.required' => 'El nombre de la categoría es requerido.',
+            'nombre.unique' => 'El nombre de la categoría ya existe.',
+            'nombre.min' => 'El nombre de la categoría debe tener mínimo 3 caracteres.',
+        ];
+
+        $this->validate($rules,$messages);
         $categoria = Categoria::find($this->seleccionar_id);
         $categoria->update([
             'nombre' => $this->nombre

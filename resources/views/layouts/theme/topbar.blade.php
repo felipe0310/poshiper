@@ -72,7 +72,7 @@
                         <a href="{{url('/categorias')}}"> Categorias </a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);"> Promociones </a>
+                        <a href="{{url('/proveedores')}}"> Proveedores </a>
                     </li>
                     <li>
                         <a href="javascript:void(0);"> Inventario </a>
@@ -103,6 +103,9 @@
                     </li>
                     <li>
                         <a href="{{url('/almacenes')}}"> Almacenes </a>
+                    </li>
+                    <li>
+                        <a href="{{url('/clientes')}}"> Clientes </a>
                     </li>
                 </ul>
             </li>

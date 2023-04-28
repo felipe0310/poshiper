@@ -11,10 +11,10 @@ class Empresas extends Component
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
-    public  $paginaTitulo, $nombreComponente, $seleccionar_id;
+    public  $buscar, $paginaTitulo, $nombreComponente, $seleccionar_id;
     private $paginacion = 7; 
 
-    public $rut, $razon_social, $direccion, $email, $iva, $buscar;
+    public $rut, $razon_social, $direccion, $email, $iva;
 
      protected $rules =
     [
@@ -97,8 +97,8 @@ class Empresas extends Component
 
         $messages = [
         'rut.required' => 'El RUT de la empresa es requerido.',
-        'razon_social.required' => 'La Razón Social es requerida.',
         'rut.unique' => 'El RUT de la empresa ya existe',
+        'razon_social.required' => 'La Razón Social es requerida.',        
         'direccion.required' => 'La dirección es requerida.',
         'email.unique' => 'El email es requerido',
         'iva.max' => 'El I.V.A es requerido',        
@@ -138,7 +138,8 @@ class Empresas extends Component
        $this->razon_social = " ";
        $this->direccion = " ";
        $this->email = " ";
-       $this->iva = " ";       
+       $this->iva = " ";
+       $this->buscar = " ";       
        $this->seleccionar_id = 0;       
         
     }

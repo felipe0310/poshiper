@@ -66,7 +66,7 @@
             <span><strong>Precio de Venta</strong></span>
         </div>
         <div class="input-group">
-            <input type="text" wire:model.lazy="precio_venta" class="form-control">
+            <input type="number" wire:model.lazy="precio_venta" class="form-control">
         </div>
         @error('precio_venta')
             <span class="text-danger er">{{ $message }}</span>
@@ -77,7 +77,7 @@
             <span><strong>Precio Mayoreo</strong></span>
         </div>
         <div class="input-group">
-            <input type="text" wire:model.lazy="precio_mayoreo" class="form-control">
+            <input type="number" wire:model.lazy="precio_mayoreo" class="form-control">
         </div>
         @error('precio_mayoreo')
             <span class="text-danger er">{{ $message }}</span>
@@ -88,7 +88,7 @@
             <span><strong>Precio Oferta</strong></span>
         </div>
         <div class="input-group">
-            <input type="text" wire:model.lazy="precio_oferta" class="form-control">
+            <input type="number" wire:model.lazy="precio_oferta" class="form-control">
         </div>
         @error('precio_oferta')
             <span class="text-danger er">{{ $message }}</span>
