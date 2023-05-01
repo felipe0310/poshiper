@@ -125,8 +125,8 @@ class Proveedores extends Component
 
     public function resetUI()
     {
-        $this->buscar =  '';
         $this->seleccionar_id = 0;
+        $this->resetValidation();
 
         $this->nombre = '';
         $this->direccion = '';

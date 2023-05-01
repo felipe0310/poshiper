@@ -1,11 +1,15 @@
 <?php
 
+
 use App\Http\Livewire\Clientes;
 use App\Http\Livewire\Empresas;
 use App\Http\Livewire\Almacenes;
+use App\Http\Livewire\Depositos;
+use App\Http\Livewire\Empleados;
 use App\Http\Livewire\Productos;
 use App\Http\livewire\Categorias;
 use App\Http\Livewire\Proveedores;
+use App\Http\Livewire\DocAlmacenes;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,3 +37,6 @@ Route::get('empresas', Empresas::class);
 Route::get('almacenes', Almacenes::class);
 Route::get('proveedores', Proveedores::class);
 Route::get('clientes', Clientes::class);
+Route::get('bodega', Depositos::class);
+Route::get('docAlmacenes', DocAlmacenes::class);
+Route::get('empleados', Empleados::class);

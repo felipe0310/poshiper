@@ -18,36 +18,28 @@
                         <table class="table table-bordered mb-4">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Código de Barras</th>
-                                    <th>Precio Compra</th>
-                                    <th>Precio Venta</th>
-                                    <th>Precio Mayoreo</th>
-                                    <th>Precio Oferta</th>
-                                    <th>Categoria</th>                                    
-
+                                    <th>Sucursal</th>
+                                    <th>Documento</th>
+                                    <th>Serie</th>
+                                    <th>Cantidad</th>                                    
                                     <th class="text-center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($productos as $producto)
+                                @foreach ($docalmacenes as $docalmacen)
                                     <tr>
-                                        <td>{{ $producto->descripcion }}</td>
-                                        <td>{{ $producto->codigo_barras }}</td>
-                                        <td>${{number_format($producto->precio_compra,0,",",".")}}</td>
-                                        <td>${{number_format( $producto->precio_venta,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_mayoreo,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_oferta,0,",",".") }}</td>
-                                        <td>{{ $producto->categorias}}</td>                                       
+                                        <td>{{ $docalmacen->almacenes }}</td>
+                                        <td>{{ $docalmacen->documento }}</td>
+                                        <td>{{ $docalmacen->serie }}</td>
+                                        <td>{{ $docalmacen->cantidad }}</td>
                                         
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
-                                                wire:click="Edit('{{ $producto->id }}')" title="Editar">
+                                                wire:click="Edit('{{ $docalmacen->id }}')" title="Editar">
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $producto->id }}')"
-                                                title="Eliminar">
+                                                onclick="Confirm('{{ $docalmacen->id }}')" title="Eliminar">
                                                 <i class="fas fa-trash" aria-hidden="true"></i>
                                             </a>
                                         </td>
@@ -55,12 +47,12 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $productos->links() }}
+                        {{ $docalmacenes->links() }}
                     </div>
                 </div>
             </div>
         </div>
-        @include('livewire.producto.form')
+        @include('livewire.docalmacen.form')
     </div>
 </div>
 
@@ -68,39 +60,36 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
-            $('#theModal').modal('hide');
-            noty(msg)
-        })
+            $('#theModal').modal('hide');            
+        });
 
         window.livewire.on('item-updated', msg => {
-            $('#theModal').modal('hide');
-            noty(msg)
-        })
+            $('#theModal').modal('hide');            
+        });
 
-        window.livewire.on('item-delete', msg => {
-            noty(msg)
-        })
+        window.livewire.on('item-delete', msg => {            
+        });
 
-        window.livewire.on('hide-modal', msg => {
-            $('#theModal').modal('hide');
-            noty(msg)
-        })        
-
-        window.livewire.on('show-modal', msg => {
+        window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
-        })
+        });
 
-        $('#theModal').on('hidden.modal', function(e) {
+        window.livewire.on('modal-hide', msg => {
+            $('#theModal').modal('hide')
+        });
+
+        window.livewire.on('hidden.bs.modal', msg => {
             $('.er').css('display', 'none');
-        })
+        });
+
+        $('#theModal').on('hidden.bs.modal', function(e) {
+            $('.er').css('display', 'none');
+        });
 
     });
 
-    function Confirm(id, productos) {
-        if (productos > 0) {
-            swal('NO SE PUEDE ELIMINAR El PRODUCTO PORQUE TIENE STOCK DISPONIBLE')
-            return;
-        }
+    function Confirm(id) {
+        
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',

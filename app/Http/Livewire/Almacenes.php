@@ -155,7 +155,8 @@ class Almacenes extends Component
        $this->entrada = " ";
        $this->salida = " ";
        $this->buscar = " ";
-       $this->seleccionar_id = 0;       
+       $this->seleccionar_id = 0;
+       $this->resetValidation();       
         
     }
 

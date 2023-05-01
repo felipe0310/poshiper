@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Empresa;
+use App\Models\DocAlmacen;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,6 +25,11 @@ class Almacen extends Model
     public function empresas()
     {
         return $this->belongsTo(Empresa::class); // pertenece a una empresa
+    }
+
+    public function docalmacen()
+    {
+        return $this->belongsTo(DocAlmacen::class); // pertenece a una empresa
     }
 
     protected $guarded = [];

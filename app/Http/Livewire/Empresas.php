@@ -138,9 +138,9 @@ class Empresas extends Component
        $this->razon_social = " ";
        $this->direccion = " ";
        $this->email = " ";
-       $this->iva = " ";
-       $this->buscar = " ";       
-       $this->seleccionar_id = 0;       
+       $this->iva = " ";              
+       $this->seleccionar_id = 0;
+       $this->resetValidation();       
         
     }
 

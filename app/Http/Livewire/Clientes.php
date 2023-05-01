@@ -144,6 +144,7 @@ class Clientes extends Component
     {
         $this->buscar =  '';
         $this->seleccionar_id = 0;
+        $this->resetValidation();
 
         $this->rut = '';
         $this->nombre = '';

@@ -18,35 +18,31 @@
                         <table class="table table-bordered mb-4">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Código de Barras</th>
-                                    <th>Precio Compra</th>
-                                    <th>Precio Venta</th>
-                                    <th>Precio Mayoreo</th>
-                                    <th>Precio Oferta</th>
-                                    <th>Categoria</th>                                    
-
+                                    <th>RUT</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Telefono</th>
+                                    <th>Dirección</th>                                    
+                                    <th>Email</th>
                                     <th class="text-center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($productos as $producto)
+                                @foreach ($empleados as $empleado)
                                     <tr>
-                                        <td>{{ $producto->descripcion }}</td>
-                                        <td>{{ $producto->codigo_barras }}</td>
-                                        <td>${{number_format($producto->precio_compra,0,",",".")}}</td>
-                                        <td>${{number_format( $producto->precio_venta,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_mayoreo,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_oferta,0,",",".") }}</td>
-                                        <td>{{ $producto->categorias}}</td>                                       
-                                        
+                                        <td>{{ $empleado->rut }}</td>
+                                        <td>{{ $empleado->nombres }}</td>
+                                        <td>{{ $empleado->apellidos }}</td>
+                                        <td>{{ $empleado->telefono }}</td>
+                                        <td>{{ $empleado->direccion }}</td>
+                                        <td>{{ $empleado->email }}</td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
-                                                wire:click="Edit('{{ $producto->id }}')" title="Editar">
+                                                wire:click="Edit('{{ $empleado->id }}')" title="Editar">
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $producto->id }}')"
+                                                onclick="Confirm('{{ $empleado->id }}')"
                                                 title="Eliminar">
                                                 <i class="fas fa-trash" aria-hidden="true"></i>
                                             </a>
@@ -55,12 +51,12 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $productos->links() }}
+                        {{ $empleados->links() }}
                     </div>
                 </div>
             </div>
         </div>
-        @include('livewire.producto.form')
+        @include('livewire.empleado.form')
     </div>
 </div>
 
@@ -84,9 +80,9 @@
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
             noty(msg)
-        })        
+        })
 
-        window.livewire.on('show-modal', msg => {
+        window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
         })
 
@@ -96,11 +92,7 @@
 
     });
 
-    function Confirm(id, productos) {
-        if (productos > 0) {
-            swal('NO SE PUEDE ELIMINAR El PRODUCTO PORQUE TIENE STOCK DISPONIBLE')
-            return;
-        }
+    function Confirm(id) {
         swal({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',

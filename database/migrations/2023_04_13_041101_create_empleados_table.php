@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('empleados', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('users');
-            $table->foreignId('almacen_id')->constrained('almacenes');
-            $table->integer('estado');
+            $table->string('nombres');
+            $table->string('apellidos');
+            $table->string('telefono');
+            $table->string('direccion');
+            $table->string('rut');
+            $table->string('email');            
             $table->timestamps();
         });
     }

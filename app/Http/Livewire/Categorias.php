@@ -104,6 +104,7 @@ class Categorias extends Component
         $this->nombre = '';
         $this->buscar =  '';
         $this->seleccionar_id = 0;
+        $this->resetValidation();
         
     }
 

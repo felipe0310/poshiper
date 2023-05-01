@@ -75,7 +75,7 @@
                         <a href="{{url('/proveedores')}}"> Proveedores </a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);"> Inventario </a>
+                        <a href="{{url('/bodega')}}"> Bodega </a>
                     </li>
                     
                 </ul>
@@ -107,6 +107,12 @@
                     <li>
                         <a href="{{url('/clientes')}}"> Clientes </a>
                     </li>
+                    <li>
+                        <a href="{{url('/docAlmacenes')}}"> Doc. Almacenes </a>
+                    </li>
+                    <li>
+                        <a href="{{url('/empleados')}}"> Empleados </a>
+                    </li>                     
                 </ul>
             </li>
         </ul>

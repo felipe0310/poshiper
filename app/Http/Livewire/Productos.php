@@ -78,8 +78,7 @@ class Productos extends Component
             ])
         ->extends('layouts.theme.app')
         ->section('content');
-        $data = Producto::where('descripcion', 'like', '%'.$this->buscar.'%')->paginate($this->paginacion);
-        $data = Producto::orderBy('descripcion','asc')->paginate($this->paginacion);
+        
     }
 
     public function Edit($id)           
@@ -94,7 +93,7 @@ class Productos extends Component
        $this->precio_mayoreo = $producto->precio_mayoreo;
        $this->precio_oferta = $producto->precio_oferta;     
 
-       $this->emit('show-modal','show modal!');      
+       $this->emit('modal-show','show modal!');      
         
     }
 
@@ -182,9 +181,9 @@ class Productos extends Component
        $this->precio_compra = "0";
        $this->precio_venta = "0";
        $this->precio_mayoreo = "0";
-       $this->precio_oferta = "0";
-       $this->buscar = " ";
-       $this->seleccionar_id = 0;       
+       $this->precio_oferta = "0";       
+       $this->seleccionar_id = 0;
+       $this->resetValidation();       
         
     }
 
