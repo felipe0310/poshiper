@@ -67,6 +67,9 @@
                 <ul class="collapse submenu list-unstyled" id="menu2" data-parent="#topAccordion">
                     <li>
                         <a href="{{url('/productos')}}"> Productos </a>
+                    </li>
+                    <li>
+                        <a href="{{url('/inventarios')}}"> Inventarios </a>
                     </li>                   
                     <li>
                         <a href="{{url('/categorias')}}"> Categorias </a>

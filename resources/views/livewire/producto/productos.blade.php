@@ -86,7 +86,7 @@
             noty(msg)
         })        
 
-        window.livewire.on('show-modal', msg => {
+        window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
         })
 

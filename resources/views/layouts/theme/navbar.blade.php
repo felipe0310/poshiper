@@ -11,8 +11,7 @@
             </svg></a>
 
         <div class="nav-logo align-self-center">
-            <a class="navbar-brand" href="#"><img alt="logo" src="assets/img/LogoBebe90x90.png"> <span
-                    class="navbar-brand-name">Hiper Pañal - POS</span></a>
+            <a class="navbar-brand"><span class="navbar-brand-name">Hiper Pañal - POS</span></a>
         </div>
 
         <ul class="navbar-item flex-row nav-dropdowns ml-auto">
@@ -31,7 +30,7 @@
 
                 <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
                     <div class="dropdown-item">
-                        <a href="user_profile.html">
+                        <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-user">

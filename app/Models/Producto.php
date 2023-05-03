@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Deposito;
 use App\Models\Categoria;
+use App\Models\Inventario;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,12 +28,7 @@ class Producto extends Model
 
     public function categorias()
     {
-        return $this->belongsTo(Categoria::class); // pertenece a una categoria
-    }
-
-    public function depositos()
-    {
-        return $this->hasMany(Deposito::class); // un producto tiene muchos depositos
+        return $this->belongsTo(Categoria::class, 'categoria_id'); // pertenece a una categoria
     }
 
     protected $guarded = [];
