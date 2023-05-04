@@ -18,7 +18,9 @@ class Inventarios extends Component
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
     private $paginacion = 7;
 
-    public $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo, $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, $inventarioDestino;
+    public $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo, 
+           $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, 
+           $inventarioDestino;
 
     protected $rules =
     [
@@ -47,8 +49,6 @@ class Inventarios extends Component
         $almacen = Almacen::find($id);
         $this->sucursalNombre = $almacen->descripcion;
         $this->nombreProducto = Inventario::with('productos')->get();
-
-
         
     } 
 
@@ -175,11 +175,8 @@ class Inventarios extends Component
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
                                             ->where('almacen_id', $this->almacenDestino)
                                             ->first();
-        if (!$inventarioDestino->productos->contains('producto_id', $this->producto_id)) { //aca quede
-            $this->emit('item-traslado', 'Producto Trasladado');
-            $this->addError('producto_id', 'El producto no existe en el almacen de destino.');
-            $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);                
-        }          
+        if ($inventarioDestino) { 
+                   
 
         // Validar que la sucursal de origen no sea la misma que la de destino
         $almacenOrigen = Almacen::findOrFail($this->almacenOrigen);
@@ -209,6 +206,13 @@ class Inventarios extends Component
         // Redireccionar a la página de inventario
         $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);       
         $this->emit('item-traslado', 'Producto Trasladado');
+                     
+        }else{
+            $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);            
+            $this->emit('item-traslado', 'Producto Trasladado');          
+            $this->addError('producto_id', 'El producto no existe en el almacen de destino.');  
+        }
+        
     }
 
 

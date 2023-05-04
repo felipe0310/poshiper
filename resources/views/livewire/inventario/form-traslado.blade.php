@@ -26,9 +26,6 @@
                                 <option value="{{ $producto->id }}">{{ $producto->descripcion }}</option>
                             @endforeach
                         </select>
-                        @error('producto_id')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror
                     </div>                    
                     <div class="col-sm-12 col-lg-12">
                         <div class="mb-2 mt-2">
@@ -53,10 +50,7 @@
                         </div>
                         @error('stock')
                             <span class="text-danger er">{{ $message }}</span>
-                        @enderror
-                        @error('producto_id')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror                        
+                        @enderror                                               
                     </div>
                 </div>
                 <div class="modal-footer">
