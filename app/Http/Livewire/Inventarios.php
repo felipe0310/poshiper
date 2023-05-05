@@ -21,7 +21,7 @@ class Inventarios extends Component
 
     public $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo, 
            $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, 
-           $inventarioDestino, $producto, $nombreProducto, $stockIn;
+           $inventarioDestino, $producto, $nombreProducto, $stockIn, $productosAgregar;
 
     protected $rules =
     [
@@ -50,14 +50,14 @@ class Inventarios extends Component
         $almacen = Almacen::find($id);
         $this->sucursalNombre = $almacen->descripcion;
 
-        $this->productos = Producto::leftJoin('inventarios', function ($join) {
+        $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
                 $join->on('productos.id', '=', 'inventarios.producto_id')
                     ->where('inventarios.almacen_id', '=', $this->almacen_id);
                     })
                     ->whereNull('inventarios.id')
                     ->select('productos.*')
                     ->get();
-
+        
     } 
 
     public function render()
@@ -98,7 +98,7 @@ class Inventarios extends Component
     }
     
     public function agregarProducto($producto_id)
-    {
+    {    
         // crear un nuevo registro en el inventario
         Inventario::create([
             'almacen_id' => $this->almacen_id,
@@ -109,7 +109,7 @@ class Inventarios extends Component
         ]);
 
         // actualizar la lista de productos
-        $this->productos = Producto::leftJoin('inventarios', function ($join) {
+        $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
                 $join->on('productos.id', '=', 'inventarios.producto_id')
                     ->where('inventarios.almacen_id', '=', $this->almacen_id);
             })

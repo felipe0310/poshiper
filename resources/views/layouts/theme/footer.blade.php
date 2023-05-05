@@ -12,6 +12,6 @@
         <p class="">Hiper Pañal - Sistema POS</p>
     </div>
     <div class="footer-section f-section-2">
-        <p class="">V 1.0.0 - by Felipe López</p>
+        <p class="">V 1.0.0 - Dev Felipe López Oñate</p>
     </div>
 </div>

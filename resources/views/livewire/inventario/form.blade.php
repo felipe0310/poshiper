@@ -16,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($productos as $producto)
+        @foreach ($productosAgregar as $producto)
             <tr>
                 <td>{{ $producto->descripcion }}</td>                
                 <td>
