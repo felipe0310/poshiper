@@ -31,5 +31,10 @@ class Producto extends Model
         return $this->belongsTo(Categoria::class, 'categoria_id'); // pertenece a una categoria
     }
 
+    public function inventarios()
+    {
+        return $this->hasMany(Categoria::class, 'id'); // pertenece a una categoria
+    }
+
     protected $guarded = [];
 }

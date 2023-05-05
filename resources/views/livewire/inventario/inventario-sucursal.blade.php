@@ -26,7 +26,7 @@
                         @enderror
                         @error('almacenOrigen')
                             <span class="text-danger er">{{ $message }}</span>
-                        @enderror                        
+                        @enderror
                     </div>
                     <div class="table-responsive">
                         @include('common.searchbox')
@@ -52,16 +52,20 @@
 
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-success"
-                                                wire:click="Edit('{{ $inventario->id }}')" title="Agregar">
+                                                wire:click="Sumar('{{ $inventario->id }}')" title="Agregar">
                                                 <i class="fas fa-plus" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-info"
-                                                wire:click="Edit('{{ $inventario->id }}')" title="Ajustar">
+                                                wire:click="Restar('{{ $inventario->id }}')" title="Ajustar">
                                                 <i class="fas fa-minus" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-warning"
                                                 wire:click="Traslado('{{ $inventario->id }}')" title="Trasladar">
                                                 <i class="fas fa-share" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn btn-primary"
+                                                wire:click="Edit('{{ $inventario->id }}')" title="Editar">
+                                                <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
                                                 onclick="Confirm('{{ $inventario->id }}','{{ $inventario->stock }}')"
@@ -84,6 +88,9 @@
         </div>
         @include('livewire.inventario.form')
         @include('livewire.inventario.form-traslado')
+        @include('livewire.inventario.form-sumar')
+        @include('livewire.inventario.form-restar')
+        @include('livewire.inventario.form-edit')
     </div>
 </div>
 
@@ -130,7 +137,44 @@
             $('.er').css('display', 'none');
         })
 
+        window.livewire.on('modal-show-sumar', msg => {
+            $('#sumarModal').modal('show')
+        })
 
+        window.livewire.on('item-sumar', msg => {
+            $('#sumarModal').modal('hide');
+            noty(msg)
+        })
+
+        $('#sumarModal').on('hidden.modal', function(e) {
+            $('.er').css('display', 'none');
+        })
+
+        window.livewire.on('modal-show-restar', msg => {
+            $('#restarModal').modal('show')
+        })
+
+        window.livewire.on('item-restar', msg => {
+            $('#restarModal').modal('hide');
+            noty(msg)
+        })
+
+        $('#restarModal').on('hidden.modal', function(e) {
+            $('.er').css('display', 'none');
+        })
+
+        window.livewire.on('modal-show-editar', msg => {
+            $('#editarModal').modal('show')
+        })
+
+        window.livewire.on('item-editar', msg => {
+            $('#editarModal').modal('hide');
+            noty(msg)
+        })
+
+        $('#editarModal').on('hidden.modal', function(e) {
+            $('.er').css('display', 'none');
+        })
 
     });
 
@@ -153,6 +197,5 @@
                 swal.close()
             }
         })
-
     }
 </script>

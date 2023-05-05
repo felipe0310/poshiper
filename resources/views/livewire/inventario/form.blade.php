@@ -13,18 +13,7 @@
         @error('producto_id')
             <span class="text-danger">{{ $message }}</span>
         @enderror
-    </div>
-    <div class="col-sm-12 col-lg-6">
-        <div class="mb-2 mt-2">
-            <span><strong>Stock</strong></span>
-        </div>
-        <div class="input-group">
-            <input type="text" wire:model.lazy="stock" class="form-control">
-        </div>
-        @error('stock')
-            <span class="text-danger er">{{ $message }}</span>
-        @enderror
-    </div>
+    </div>    
     <div class="col-sm-12 col-lg-6">
         <div class="mb-2 mt-2">
             <span><strong>Stock Minimo</strong></span>
