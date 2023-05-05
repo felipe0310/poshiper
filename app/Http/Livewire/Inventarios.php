@@ -8,6 +8,8 @@ use App\Models\Producto;
 use App\Models\Inventario;
 use Illuminate\Http\Request;
 use Livewire\WithPagination;
+    
+
 
 class Inventarios extends Component
 {
@@ -48,14 +50,25 @@ class Inventarios extends Component
         $almacen = Almacen::find($id);
         $this->sucursalNombre = $almacen->descripcion;
 
+        $this->productos = Producto::leftJoin('inventarios', function ($join) {
+                $join->on('productos.id', '=', 'inventarios.producto_id')
+                    ->where('inventarios.almacen_id', '=', $this->almacen_id);
+                    })
+                    ->whereNull('inventarios.id')
+                    ->select('productos.*')
+                    ->get();
+
     } 
 
     public function render()
-    {                        
+    {   
+        $almacen = Almacen::find($this->almacen_id);
+
         if(strlen($this->buscar) > 0)
             $inventarios = 
             Inventario::join('productos as p','p.id','inventarios.producto_id')
             ->join('almacenes as a','a.id','inventarios.almacen_id')
+            ->with('almacenes','productos.categorias')
             ->select('inventarios.*','p.descripcion')
             ->where('inventarios.almacen_id', '=', $this->almacen_id)
             ->where('p.descripcion','like','%' . $this->buscar . '%')
@@ -65,47 +78,49 @@ class Inventarios extends Component
         
         else
 
-            $inventarios = Inventario::with('almacenes','productos.categorias')
-            ->where('almacen_id' , $this->almacen_id)
-            ->paginate($this->paginacion);        
+            $inventarios = 
+            Inventario::join('productos as p','p.id','inventarios.producto_id')
+            ->join('almacenes as a','a.id','inventarios.almacen_id')
+            ->with('almacenes','productos.categorias')
+            ->where('inventarios.almacen_id', '=', $this->almacen_id)
+            ->select('inventarios.*','p.descripcion')         
+            ->orderBy('p.descripcion', 'asc')
+            ->paginate($this->paginacion);         
 
         return view('livewire.inventario.inventario-sucursal',[
             'inventarios' => $inventarios,
             'productos' => Producto::all(),
-            'almacenes' => Almacen::all()
+            'almacenes' => Almacen::all(),
+            'almacen' => $almacen
             ])
             ->extends('layouts.theme.app')
             ->section('content');              
-    }    
-
-    public function Store()
-    {  
-
-        $rules =
-    [        
-        'producto_id' => 'required|unique:inventarios',        
-        'stock_minimo' => 'required'
-    ];
-
-    $messages = 
-    [       
-        'producto_id.required' => 'El producto es requerido',
-        'producto_id.unique' => 'El producto ya existe',         
-        'stock_minimo.required' => 'El stock minimo es requerido.',        
-    ];
-
-        $this->validate($rules,$messages);
-
-        $inventarios = Inventario::create([
+    }
+    
+    public function agregarProducto($producto_id)
+    {
+        // crear un nuevo registro en el inventario
+        Inventario::create([
             'almacen_id' => $this->almacen_id,
-            'producto_id' => $this->producto_id,
+            'producto_id' => $producto_id,
             'usuario_id' => 1,
             'stock' => 0,
-            'stock_minimo' => $this->stock_minimo          
+            'stock_minimo' => 0
         ]);
+
+        // actualizar la lista de productos
+        $this->productos = Producto::leftJoin('inventarios', function ($join) {
+                $join->on('productos.id', '=', 'inventarios.producto_id')
+                    ->where('inventarios.almacen_id', '=', $this->almacen_id);
+            })
+            ->whereNull('inventarios.id')
+            ->select('productos.*')
+            ->get();
+
+        // mostrar un mensaje de éxito
+        $this->emit('item-added', 'Producto Trasladado');
         $this->resetUI();
-        $this->emit('item-added', 'Producto Registrado');
-    }
+    }   
 
     public function Edit(Inventario $inventario)           
     {
@@ -240,8 +255,7 @@ class Inventarios extends Component
         }
         
     }
-
-
+    
     protected $listeners = [
         'deleteRow' => 'Destroy'
     ];
@@ -283,7 +297,7 @@ class Inventarios extends Component
 
         // Redireccionar a la página de inventario        
         $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id', 'stockIn']);
-        $this->emit('item-sumar', 'Producto Trasladado');       
+        $this->emit('item-sumar', 'Producto Trasladado');
         
         
     }
@@ -328,12 +342,13 @@ class Inventarios extends Component
         }else{            
 
             $inventarioDestino->stock -= $this->stockIn;
-            $inventarioDestino->save(); 
-        }
+            $inventarioDestino->save();
+        
+    }
 
         // Redireccionar a la página de inventario        
         $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id', 'stockIn']);
-        $this->emit('item-restar', 'Producto Trasladado');       
+        $this->emit('item-restar', 'Producto Trasladado');        
         
     }
 

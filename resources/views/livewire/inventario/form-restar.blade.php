@@ -48,8 +48,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" wire:click.prevent="restarStock()" class="btn btn-info close-modal">GUARDAR</button>
                     <button type="button" wire:click.prevent="resetUI()" class="btn btn-button btn-danger" data-bs-dismiss="modal">CERRAR</button>
+                    <button type="button" wire:click.prevent="restarStock()" class="btn btn-info close-modal">GUARDAR</button>                    
                 </div>
             </div>
         </div>

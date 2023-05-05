@@ -15,7 +15,7 @@
  <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" type="text/css" />
  <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" type="text/css" />
  <link href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
- <script src="{{ asset('js/app.js') }}"></script>    
+ <script src="{{ asset('js/app.js') }}"></script>
  <!-- END GLOBAL MANDATORY STYLES -->
  @livewireStyles
 

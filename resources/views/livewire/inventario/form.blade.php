@@ -1,29 +1,37 @@
-@include('common.modalHead')
-<div class="row">
-    <div class="col-sm-12 col-lg-12">
-        <div class="mb-2 mt-2">
-            <span><strong>Productos</strong></span>
-        </div>
-        <select class="custom-select col-12" wire:model="producto_id">
-            <option selected>Seleccione el Producto</option>
-            @foreach ($productos as $producto)
-                <option value="{{ $producto->id }}">{{ $producto->descripcion }}</option>
-            @endforeach
-        </select>
-        @error('producto_id')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>    
-    <div class="col-sm-12 col-lg-6">
-        <div class="mb-2 mt-2">
-            <span><strong>Stock Minimo</strong></span>
-        </div>
-        <div class="input-group">
-            <input type="text" wire:model.lazy="stock_minimo" class="form-control">
-        </div>
-        @error('stock_minimo')
-            <span class="text-danger er">{{ $message }}</span>
-        @enderror
-    </div>
+<div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #0654a1">
+                <h5 class="modal-title text-white">
+                    <b>Agregar</b> | Productos
+                </h5>
+                <h6 class="text-center text-warning" wire:loading>Por Favor Espere</h6>
+            </div>
+            <div class="modal-body">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Nombre del Producto</th>            
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($productos as $producto)
+            <tr>
+                <td>{{ $producto->descripcion }}</td>                
+                <td>
+                    <button class="btn btn-primary" wire:click="agregarProducto({{ $producto->id }})">Agregar al inventario</button>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 </div>
-@include('common.modalFooter')
+    <div class="modal-footer">
+        
+        <button type="button" wire:click.prevent="resetUI()" class="btn btn-button btn-danger" data-bs-dismiss="modal">CERRAR</button>            
+
+      </div>
+    </div>
+  </div>
+</div>

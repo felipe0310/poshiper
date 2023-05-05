@@ -99,21 +99,24 @@
 
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
-            noty(msg)
+            Swal.fire('Producto agregado con exito')
+
         })
 
         window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
-            noty(msg)
+            Swal.fire('Producto editado con exito')
+
         })
 
         window.livewire.on('item-delete', msg => {
-            noty(msg)
+            Swal.fire('Producto eliminado con exito')
         })
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
-            noty(msg)
+            Swal.fire('Producto agregado con exito')
+
         })
 
         window.livewire.on('modal-show', msg => {
@@ -130,7 +133,7 @@
 
         window.livewire.on('item-traslado', msg => {
             $('#trasladoModal').modal('hide');
-            noty(msg)
+
         })
 
         $('#trasladoModal').on('hidden.modal', function(e) {
@@ -143,7 +146,7 @@
 
         window.livewire.on('item-sumar', msg => {
             $('#sumarModal').modal('hide');
-            noty(msg)
+
         })
 
         $('#sumarModal').on('hidden.modal', function(e) {
@@ -156,7 +159,8 @@
 
         window.livewire.on('item-restar', msg => {
             $('#restarModal').modal('hide');
-            noty(msg)
+            Swal.fire('Stock disminuido con exito')
+
         })
 
         $('#restarModal').on('hidden.modal', function(e) {
@@ -169,12 +173,13 @@
 
         window.livewire.on('item-editar', msg => {
             $('#editarModal').modal('hide');
-            noty(msg)
+            Swal.fire('Producto editado con exito')
         })
 
         $('#editarModal').on('hidden.modal', function(e) {
             $('.er').css('display', 'none');
         })
+
 
     });
 
