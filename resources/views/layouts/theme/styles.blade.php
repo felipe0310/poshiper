@@ -7,17 +7,17 @@
  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/widgets/modules-widgets.css') }}">
  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
   --}}
-
+@livewireStyles
  <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap" rel="stylesheet">
  <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-
  <link href="{{ asset('plugins/font-icons/fontawesome/css/fontawesome.css') }}" rel="stylesheet" type="text/css" />
  <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" type="text/css" />
  <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" type="text/css" />
- <link href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10" rel="stylesheet" type="text/css" ></script>
+ 
  <script src="{{ asset('js/app.js') }}"></script>
  <!-- END GLOBAL MANDATORY STYLES -->
- @livewireStyles
+ 
 
  <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 

@@ -8,12 +8,12 @@ use App\Models\Producto;
 use App\Models\Inventario;
 use Illuminate\Http\Request;
 use Livewire\WithPagination;
-    
-
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Inventarios extends Component
 {
     use WithPagination;
+    use LivewireAlert;       
 
     protected $paginationTheme = 'bootstrap';
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
@@ -21,7 +21,7 @@ class Inventarios extends Component
 
     public $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo, 
            $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, 
-           $inventarioDestino, $producto, $nombreProducto, $stockIn, $productosAgregar;
+           $inventarioDestino, $producto, $nombreProducto, $stockIn, $productosAgregar;    
 
     protected $rules =
     [
@@ -53,11 +53,11 @@ class Inventarios extends Component
         $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
                 $join->on('productos.id', '=', 'inventarios.producto_id')
                     ->where('inventarios.almacen_id', '=', $this->almacen_id);
-                    })
-                    ->whereNull('inventarios.id')
-                    ->select('productos.*')
-                    ->get();
-        
+            })
+            ->whereNull('inventarios.id')
+            ->select('productos.*')
+            ->get();
+                                          
     } 
 
     public function render()
@@ -98,7 +98,7 @@ class Inventarios extends Component
     }
     
     public function agregarProducto($producto_id)
-    {    
+    {        
         // crear un nuevo registro en el inventario
         Inventario::create([
             'almacen_id' => $this->almacen_id,
@@ -115,12 +115,20 @@ class Inventarios extends Component
             })
             ->whereNull('inventarios.id')
             ->select('productos.*')
-            ->get();
-
+            ->get(); 
+        
         // mostrar un mensaje de éxito
-        $this->emit('item-added', 'Producto Trasladado');
-        $this->resetUI();
-    }   
+        $this->alert('success', 'PRODUCTO AGREGADO CON EXITO',[
+        'position' => 'center'
+        ]);
+        
+    } 
+    
+    public function closeModal()
+    {
+        $this->showModal = false;
+        
+    }
 
     public function Edit(Inventario $inventario)           
     {
@@ -129,7 +137,8 @@ class Inventarios extends Component
        $this->producto_id = $inventario->producto_id;
        $this->usuario_id = $inventario->usuario_id;
        $this->stock = $inventario->stock;
-       $this->stock_minimo = $inventario->stock_minimo;       
+       $this->stock_minimo = $inventario->stock_minimo;
+             
 
        $this->emit('modal-show-editar','show modal!');      
         
@@ -163,18 +172,31 @@ class Inventarios extends Component
 
         $this->resetUI();
         $this->emit('item-editar', 'Producto Actualizado');
+        $this->alert('success', 'PRODUCTO EDITADO CON EXITO',[
+        'position' => 'center'
+        ]);
+         
 
     }
 
     public function Destroy(Inventario $inventario)
-    {        
+    {   
         $inventario->delete();
         $this->resetUI();
-        $this->emit('item-delete', 'Producto Eliminado');
+        $this->alert('success', 'PRODUCTO ELIMINADO CON EXITO',[
+        'position' => 'center'
+        ]);
+        $this->emit('refresh');
+        $this->resetUI();
+    }   
 
-    }
+    protected $listeners = [
+        'deleteRow' => 'Destroy',
+        'refresh'
+    ];
 
-    public function Traslado(Inventario $inventario){
+    public function Traslado(Inventario $inventario)
+    {
        $this->almacenOrigen = $inventario->almacen_id;
        $this->producto_id = $inventario->producto_id;
        $this->stock = $inventario->stock;     
@@ -201,64 +223,66 @@ class Inventarios extends Component
 
         $this->validate($rules,$messages);
 
-        // Validar que el producto exista en el almacen de origen
         $producto = Producto::findOrFail($this->producto_id);
+
         $inventarioOrigen = Inventario::where('producto_id', $this->producto_id)
                                   ->where('almacen_id', $this->almacenOrigen)
                                   ->first();
-        if (!$inventarioOrigen) {            
-            $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);       
-            $this->emit('item-traslado', 'Producto Trasladado');            
-            $this->addError('producto_id', 'El producto no existe en el almacen de origen.');            
-        }
 
-        // Validar que el producto exista en el almacen de destino
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
                                             ->where('almacen_id', $this->almacenDestino)
                                             ->first();
         if ($inventarioDestino) { 
                    
+            // Validar que la sucursal de origen no sea la misma que la de destino
+            $almacenOrigen = Almacen::findOrFail($this->almacenOrigen);
+            $almacenDestino = Almacen::findOrFail($this->almacenDestino);
 
-        // Validar que la sucursal de origen no sea la misma que la de destino
-        $almacenOrigen = Almacen::findOrFail($this->almacenOrigen);
-        $almacenDestino = Almacen::findOrFail($this->almacenDestino);
-        if ($almacenOrigen->id == $almacenDestino->id) {
-            $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);       
+            if ($almacenOrigen->id == $almacenDestino->id) {
+                $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);       
+                $this->emit('item-traslado', 'Producto Trasladado');
+                $this->addError('almacenOrigen', 'El almacen de origen no puede ser el mismo que el de destino.');
+                $this->alert('error', 'EL ALMACEN DE ORIGEN NO PUEDE SER EL MISMO QUE EL DE DESTINO',[
+                'position' => 'center'
+                ]);             
+            }        
+
+            // Validar que el stock no sea mayor
+            elseif ($inventarioOrigen->stock < $this->stock) {
             $this->emit('item-traslado', 'Producto Trasladado');
-            $this->addError('almacenOrigen', 'El almacen de origen no puede ser el mismo que el de destino.');            
-        }        
+            $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']); 
+            $this->addError('sinStock', 'No hay suficiente stock.');
+            $this->alert('error', 'NO HAY STOCK SUFICIENTE PARA TRASLADAR',[
+                'position' => 'center'
+                ]);                 
+            }else{
 
-        // Validar que el stock no sea mayor
-        if ($inventarioOrigen->stock < $this->stock) {
-        $this->emit('item-traslado', 'Producto Trasladado');
-        $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']); 
-        $this->addError('sinStock', 'No hay suficiente stock.');                
-        }
+                // Restar stock del almacen de origen
+                $inventarioOrigen->stock -= $this->stock;
+                $inventarioOrigen->save();
 
+                // Agregar stock al almacen de destino
+                $inventarioDestino->stock += $this->stock;
+                $inventarioDestino->save();
 
-        // Restar stock del almacen de origen
-        $inventarioOrigen->stock -= $this->stock;
-        $inventarioOrigen->save();
+                // Redireccionar a la página de inventario
+                $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);       
+                $this->emit('item-traslado', 'Producto Trasladado');
+                $this->alert('success', 'PRODUCTO TRASLADADO CON EXITO',[
+                'position' => 'center'
+                ]);  
+            }                               
 
-        // Agregar stock al almacen de destino
-        $inventarioDestino->stock += $this->stock;
-        $inventarioDestino->save();
-
-        // Redireccionar a la página de inventario
-        $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);       
-        $this->emit('item-traslado', 'Producto Trasladado');
-                     
         }else{
             $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']);            
             $this->emit('item-traslado', 'Producto Trasladado');          
-            $this->addError('producto_id', 'El producto no existe en el almacen de destino.');  
-        }
+            $this->addError('producto_id', 'El producto no existe en el almacen de destino.');
+            $this->alert('error', 'EL PRODUCTO NO EXISTE EN EL ALMACEN DE DESTINO',[
+            'position' => 'center'
+            ]);   
+        }        
         
-    }
-    
-    protected $listeners = [
-        'deleteRow' => 'Destroy'
-    ];
+    }    
 
     public function Sumar(Inventario $inventario){
        $this->almacenOrigen = $inventario->almacen_id;
@@ -298,6 +322,9 @@ class Inventarios extends Component
         // Redireccionar a la página de inventario        
         $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id', 'stockIn']);
         $this->emit('item-sumar', 'Producto Trasladado');
+        $this->alert('success', 'STOCK AUMENTADO CON EXITO',[
+            'position' => 'center'
+            ]);
         
         
     }
@@ -338,21 +365,24 @@ class Inventarios extends Component
             $this->emit('item-restar', 'Producto Trasladado');
             $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id']); 
             $this->addError('sinStock', 'No hay suficiente stock.');
+            $this->alert('error', 'EL STOCK A DISMIUR SUPERA EL STOCK ACTUAL',[
+                'position' => 'center'
+                ]); 
 
         }else{            
 
             $inventarioDestino->stock -= $this->stockIn;
             $inventarioDestino->save();
+            // Redireccionar a la página de inventario        
+            $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id', 'stockIn']);
+            $this->emit('item-restar', 'Producto Trasladado');
+            $this->alert('success', 'STOCK DISMINUIDO CON EXITO',[
+                'position' => 'center'
+                ]); 
+        
+        }               
         
     }
-
-        // Redireccionar a la página de inventario        
-        $this->reset(['almacenOrigen', 'almacenDestino', 'stock', 'producto_id', 'stockIn']);
-        $this->emit('item-restar', 'Producto Trasladado');        
-        
-    }
-
-
 
     public function resetUI()
     {
@@ -361,7 +391,7 @@ class Inventarios extends Component
        $this->almacenDestino = " ";
        $this->stock = " ";
        $this->stock_minimo = " ";                   
-       $this->seleccionar_id = 0;
+       $this->seleccionar_id = 0;       
        $this->resetValidation();       
         
     }

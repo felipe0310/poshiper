@@ -10,6 +10,7 @@
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     @include('layouts.theme.styles')
     
+    
 
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
@@ -37,7 +38,7 @@
 
                     <!-- CONTENT AREA -->
 
-                    @yield('content')
+                    @yield('content') 
 
                     <!-- CONTENT AREA -->
 
@@ -53,6 +54,8 @@
 
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
     @include('layouts.theme.scripts')
+    
+
     <!-- END GLOBAL MANDATORY SCRIPTS -->
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->

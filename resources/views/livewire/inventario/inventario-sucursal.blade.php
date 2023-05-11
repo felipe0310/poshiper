@@ -18,15 +18,6 @@
                 <div class="widget-content widget-content-area">
                     <div>
                         <h5 class="col-sm-12">Sucursal : {{ $sucursalNombre }} </h5>
-                        @error('sinStock')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror
-                        @error('producto_id')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror
-                        @error('almacenOrigen')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror
                     </div>
                     <div class="table-responsive">
                         @include('common.searchbox')
@@ -92,31 +83,24 @@
         @include('livewire.inventario.form-restar')
         @include('livewire.inventario.form-edit')
     </div>
+
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
-            $('#theModal').modal('hide');
-            Swal.fire('Producto agregado con exito')
-
+            $('#theModal').modal('hide');            
         })
 
         window.livewire.on('item-updated', msg => {
-            $('#theModal').modal('hide');
-            Swal.fire('Producto editado con exito')
-
+            $('#theModal').modal('hide');            
         })
 
-        window.livewire.on('item-delete', msg => {
-            Swal.fire('Producto eliminado con exito')
-        })
+        window.livewire.on('item-delete', msg => {})
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
-            Swal.fire('Producto agregado con exito')
-
         })
 
         window.livewire.on('modal-show', msg => {
@@ -133,7 +117,6 @@
 
         window.livewire.on('item-traslado', msg => {
             $('#trasladoModal').modal('hide');
-
         })
 
         $('#trasladoModal').on('hidden.modal', function(e) {
@@ -159,8 +142,6 @@
 
         window.livewire.on('item-restar', msg => {
             $('#restarModal').modal('hide');
-            Swal.fire('Stock disminuido con exito')
-
         })
 
         $('#restarModal').on('hidden.modal', function(e) {
@@ -172,8 +153,7 @@
         })
 
         window.livewire.on('item-editar', msg => {
-            $('#editarModal').modal('hide');
-            Swal.fire('Producto editado con exito')
+            $('#editarModal').modal('hide');            
         })
 
         $('#editarModal').on('hidden.modal', function(e) {
@@ -183,19 +163,27 @@
 
     });
 
+    document.addEventListener('livewire:load', function () {
+            Livewire.on('refreshComponent', function () {
+                Livewire.refresh();
+            });
+        });
+
     function Confirm(id, stock) {
         if (stock > 0) {
-            swal('NO SE PUEDE ELIMINAR El PRODUCTO PORQUE TIENE STOCK DISPONIBLE')
+            Swal.fire({
+                title:'NO SE PUEDE ELIMINAR EL PRODUCTO PORQUE TIENE STOCK DISPONIBLE',
+                icon: 'error',                
+            })
             return;
         }
-        swal({
-            title: 'CONFIRMAR',
-            text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
+        Swal.fire({
+            title: 'ATENCIÓN',
+            text: '¿CONFIRMAS ELIMINAR EL PRODUCTO?',
+            icon: 'warning',            
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             confirmButtonText: 'Aceptar'
-
         }).then(function(result) {
             if (result.value) {
                 window.livewire.emit('deleteRow', id)
