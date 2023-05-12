@@ -7,15 +7,7 @@
             </div>
             <div class="modal-body">
                 <!-- Formulario de traslado de stock -->
-                <div class="row">
-                    <div class="col-sm-12 col-lg-12">
-                        <div class="mb-2 mt-2">
-                            <span><strong>Almacén</strong></span>
-                        </div>
-                        <div>
-                            <h5 wire:model="almacenOrigen"><strong>{{$sucursalNombre}}</strong></h5>                            
-                        </div>
-                    </div>
+                <div class="row">                    
                     <div class="col-sm-12 col-lg-12">
                         <div class="mb-2 mt-2">
                             <span><strong>Producto</strong></span>
@@ -29,23 +21,12 @@
                     </div>
                     <div class="col-sm-12 col-lg-12">
                         <div class="mb-2 mt-2">
-                            <span><strong>Stock Actual</strong></span>
+                            <span><strong>Stock</strong></span>
                         </div>
                         <div class="input-group">
-                            <input type="number" wire:model.lazy="stock" class="form-control" readonly>                            
+                            <input type="number" wire:model.lazy="stock" class="form-control" onkeypress='return validaNumericos(event)'>                            
                         </div>                                              
-                    </div>
-                    <div class="col-sm-12 col-lg-12">
-                        <div class="mb-2 mt-2">
-                            <span><strong>Stock Minimo</strong></span>
-                        </div>
-                        <div class="input-group">
-                            <input type="number" wire:model.lazy="stock_minimo" class="form-control" onkeypress='return validaNumericos(event)'>
-                        </div>
-                        @error('stock_minimo')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror                                               
-                    </div>
+                    </div>                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" wire:click.prevent="Update()" class="btn btn-info close-modal">GUARDAR</button>

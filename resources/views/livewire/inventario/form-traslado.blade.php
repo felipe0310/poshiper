@@ -51,12 +51,12 @@
                     </div>
                     <div class="col-sm-12 col-lg-12">
                         <div class="mb-2 mt-2">
-                            <span><strong>Cantidad</strong></span>
+                            <span><strong>Cantidad a Enviar</strong></span>
                         </div>
                         <div class="input-group">
-                            <input type="text" wire:model.lazy="stock" class="form-control">
+                            <input type="text" wire:model.lazy="stockIn" class="form-control" onkeypress='return validaNumericos(event)'>
                         </div>
-                        @error('stock')
+                        @error('stockIn')
                             <span class="text-danger er">{{ $message }}</span>
                         @enderror
                     </div>
@@ -64,7 +64,7 @@
                 <div class="modal-footer">
                     <button type="button" wire:click.prevent="trasladarStock()"
                         class="btn btn-info close-modal">TRASLADAR</button>
-                    <button type="button" wire:click.prevent="resetUI()" class="btn btn-button btn-danger"
+                    <button type="button" wire:click.prevent="closeModal" class="btn btn-button btn-danger"
                         data-bs-dismiss="modal">CERRAR</button>
                 </div>
             </div>

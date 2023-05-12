@@ -17,7 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($productosAgregar as $producto)
+                        @forelse ($productosAgregar as $producto)
                             <tr>
                                 <td>{{ $producto->descripcion }}</td>
                                 <td>
@@ -25,13 +25,17 @@
                                         wire:click="agregarProducto({{ $producto->id }})">Agregar al inventario</button>
                                 </td>
                             </tr>
-                        @endforeach
+                            @empty
+                                    <tr>
+                                        <td colspan="6"> No se encontraron productos </td>
+                                    </tr>
+                            @endforelse                       
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
 
-                <button type="button" wire:click="closeModal" class="btn btn-button btn-danger"
+                <button type="button" wire:click.prevent="closeModal" class="btn btn-button btn-danger"
                     data-bs-dismiss="modal">CERRAR</button>
 
             </div>

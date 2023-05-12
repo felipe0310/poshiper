@@ -40,7 +40,7 @@
                             <span><strong>Cantidad a Ajustar</strong></span>
                         </div>
                         <div class="input-group">
-                            <input type="number" wire:model.lazy="stockIn" class="form-control">
+                            <input type="number" wire:model.lazy="stockIn" class="form-control" onkeypress='return validaNumericos(event)'>
                         </div>
                         @error('stockIn')
                             <span class="text-danger er">{{ $message }}</span>
@@ -48,8 +48,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" wire:click.prevent="resetUI()" class="btn btn-button btn-danger" data-bs-dismiss="modal">CERRAR</button>
-                    <button type="button" wire:click.prevent="restarStock()" class="btn btn-info close-modal">GUARDAR</button>                    
+                    <button type="button" wire:click.prevent="restarStock()" class="btn btn-info close-modal">GUARDAR</button> 
+                    <button type="button" wire:click.prevent="closeModal" class="btn btn-button btn-danger" data-bs-dismiss="modal">CERRAR</button>                                       
                 </div>
             </div>
         </div>

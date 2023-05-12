@@ -2,19 +2,26 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Almacen;
 use Livewire\Component;
-use App\Models\Producto;
 use App\Models\Deposito;
+use App\Models\Producto;
+use App\Models\Inventario;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Depositos extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
+    public $productosDisponibles = [];
 
-    public $producto_id, $stock;      
+    public $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo, 
+           $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, 
+           $inventarioDestino, $producto, $nombreProducto, $stockIn = 0, $productosAgregar;      
 
     private $paginacion = 7;    
 
@@ -35,7 +42,10 @@ class Depositos extends Component
     {       
         $this->paginaTitulo = 'Listado';
         $this->nombreComponente = 'Bodega';
-        $this->stock = "0";
+        
+        $productosIngresados = Deposito::pluck('producto_id')->toArray();
+        $this->productosDisponibles = Producto::whereNotIn('id', $productosIngresados)->get();
+
     } 
 
     public function render()
@@ -55,7 +65,9 @@ class Depositos extends Component
             
         return view('livewire.deposito.depositos',[            
             'depositos'=>$depositos,
-            'productos' => Producto::orderBy('descripcion','asc')->get()            
+            'productos' => Producto::orderBy('descripcion','asc')->get(),
+            'almacenes' => Almacen::all(),
+            'inventarios' => Inventario::all()            
         ])
         ->extends('layouts.theme.app')
         ->section('content');   
@@ -68,19 +80,20 @@ class Depositos extends Component
        $this->producto_id = $deposito->producto_id;
        $this->stock = $deposito->stock;           
 
-       $this->emit('modal-show','show modal!');        
+       $this->emit('modal-show-editar','show modal!');         
         
     }   
 
-    public function Store()
-    {   
-        $this->validate();  
+    public function Store($producto_id)
+    {            
         $deposito = Deposito::create([
-            'producto_id' => $this->producto_id,
-            'stock' => $this->stock,         
+            'producto_id' => $producto_id,
+            'stock' => 0,         
         ]);
-        $this->resetUI();
-        $this->emit('item-added', 'Deposito Registrado');
+
+        $productosIngresados = Deposito::pluck('producto_id')->toArray();
+        $this->productosDisponibles = Producto::whereNotIn('id', $productosIngresados)->get();
+        
     }
 
     public function Update()
@@ -89,11 +102,13 @@ class Depositos extends Component
     [
         'producto_id' => "required|unique:depositos,producto_id,{$this->seleccionar_id}",
         'stock' => 'required',
+        'stock' => 'numeric',
 
     ];
         $messages = [
         'producto_id.required' => 'El producto es requerido.',
         'stock.required' => 'El Stock no puede ser vacio, sin Stock ingrese 0.',
+        'stock.numeric' => 'El Stock no puede ser negativo.',
         'producto_id.unique' => 'El producto ya existe',
     ];
         
@@ -106,7 +121,7 @@ class Depositos extends Component
         ]);
 
         $this->resetUI();
-        $this->emit('item-updated', 'Deposito Actualizado');
+        $this->emit('item-editar', 'Deposito Actualizado');
 
     }    
 
@@ -114,20 +129,200 @@ class Depositos extends Component
     {
         $deposito->delete();
         $this->resetUI();
-        $this->emit('item-delete', 'Deposito Eliminado');
+        $this->emit('refresh');        
 
+    }
+
+    public function Restar(Deposito $deposito){
+       $this->producto_id = $deposito->producto_id;
+       $this->stock = $deposito->stock;  
+       $this->emit('modal-show-restar','show modal!');
+    }
+
+    public function restarStock()
+    {
+        $rules =
+    [        
+        'stockIn' => 'required'
+    ];
+
+        $messages = [
+        
+        'stockIn.required' => 'El stock es requerido.'   
+    ];
+
+        $this->validate($rules,$messages);
+        // Validar que el producto exista en el almacen de origen
+        $producto = Producto::findOrFail($this->producto_id);        
+        $inventarioDestino = Deposito::where('producto_id', $this->producto_id)
+                                            ->first();
+
+        if($this->stockIn == 0){
+            $this->emit('item-restar', 'Producto Trasladado');
+            $this->resetUI();
+        }      
+        elseif ($inventarioDestino->stock < $this->stockIn) {
+
+            $this->emit('item-restar', 'Producto Trasladado');
+            $this->resetUI();
+            $this->addError('sinStock', 'No hay suficiente stock.');
+            $this->alert('error', 'EL STOCK A DISMIUR SUPERA EL STOCK ACTUAL',[
+                'position' => 'center'
+                ]); 
+
+        }else{            
+
+            $inventarioDestino->stock -= $this->stockIn;
+            $inventarioDestino->save();
+            // Redireccionar a la página de inventario        
+            $this->resetUI();
+            $this->emit('item-restar', 'Producto Trasladado');
+            $this->alert('success', 'STOCK DISMINUIDO CON EXITO',[
+                'position' => 'center'
+                ]); 
+        
+        }
+        
+    }    
+    
+    public function Sumar(Deposito $deposito){
+       $this->producto_id = $deposito->producto_id;
+       $this->stock = $deposito->stock;   
+       $this->emit('modal-show-sumar','show modal!');
+    }
+
+    public function sumarStock()
+    {
+        $rules =
+    [        
+        'stockIn' => 'required',
+    ];
+
+        $messages = [
+        
+        'stockIn.required' => 'El stock es requerido.',
+                       
+    ];
+
+        $this->validate($rules,$messages);
+
+        if($this->stockIn == 0){
+            $this->resetUI();
+            $this->emit('item-sumar', 'Producto Trasladado');
+        }else{
+        // Validar que el producto exista en el almacen de origen
+        $producto = Producto::findOrFail($this->producto_id);        
+        $inventarioDestino = Deposito::where('producto_id', $this->producto_id)
+                                            ->first();
+
+        // Agregar stock al almacen de destino
+        $inventarioDestino->stock += $this->stockIn;
+        $inventarioDestino->save();
+
+        // Redireccionar a la página de inventario        
+        $this->resetUI();
+        $this->emit('item-sumar', 'Producto Trasladado');
+        $this->alert('success', 'STOCK AUMENTADO CON EXITO',[
+            'position' => 'center'
+            ]);
+        }        
+    }
+
+    
+
+    public function Traslado(Deposito $deposito)
+    {            
+       $this->producto_id = $deposito->producto_id;
+       $this->stock = $deposito->stock;     
+       $this->emit('modal-show-traslado','show modal!');
+    }
+
+    public function trasladarStock()
+    {   
+        $rules =
+    [        
+        'almacenDestino' => 'required',
+        'producto_id' => 'required',
+        'stock' => 'required',
+        'stockIn' => 'required',
+    ];
+
+        $messages = [
+
+        'almacenDestino.required' => 'El Almacen de destino es requerido',      
+        'producto_id.required' => 'El producto es requerido',
+        'stock.required' => 'El stock es requerido.',
+        'stockIn.required' => 'La cantidad a trasladar es requerida',       
+    ];
+
+        $this->validate($rules,$messages);
+
+        $inventarioOrigen = Deposito::where('producto_id', $this->producto_id)
+                             ->where('stock', $this->stock)
+                             ->first();
+
+        $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
+                             ->where('almacen_id', $this->almacenDestino)
+                             ->first();
+
+        if ($inventarioDestino) {                   
+
+            // Validar que el stock no sea mayor
+            if ($inventarioOrigen->stock < $this->stockIn) {
+            $this->resetUI();
+            $this->emit('item-traslado', 'Producto Trasladado');            
+            $this->alert('error', 'NO HAY STOCK SUFICIENTE PARA TRASLADAR',[
+                'position' => 'center'
+                ]);                 
+            }else{
+
+                // Restar stock del almacen de origen
+                $inventarioOrigen->stock -= $this->stockIn;
+                $inventarioOrigen->save();
+
+                // Agregar stock al almacen de destino
+                $inventarioDestino->stock += $this->stockIn;
+                $inventarioDestino->save();
+
+                // Redireccionar a la página de inventario
+                $this->resetUI();       
+                $this->emit('item-traslado', 'Producto Trasladado');
+                $this->alert('success', 'PRODUCTO TRASLADADO CON EXITO',[
+                'position' => 'center'
+                ]);  
+            }                               
+
+        }else{
+            $this->resetUI();           
+            $this->emit('item-traslado', 'Producto Trasladado');
+            $this->alert('error', 'EL PRODUCTO NO EXISTE EN EL ALMACEN DE DESTINO',[
+            'position' => 'center'
+            ]);   
+        }        
+        
+    }
+
+    public function closeModal()
+    {
+        $this->showModal = false;
+        $this->resetUI();
+        
     }
 
     protected $listeners = [
         'deleteRow' => 'Destroy',
+        'refresh'
     ];
 
     public function resetUI()
     {         
        $this->resetValidation();
-       $this->producto_id = " ";
-       $this->stock = "0";       
-       $this->seleccionar_id = 0;       
+       $this->producto_id = "";
+       $this->almacenDestino= "";
+       $this->stock = 0;
+       $this->stockIn = 0;       
+       $this->seleccionar_id = 0;
+              
     }
 
 

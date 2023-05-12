@@ -27,7 +27,7 @@
             <span><strong>Cantidad</strong></span>
         </div>
         <div class="input-group">
-            <input type="text" wire:model.lazy="cantidad" class="form-control">
+            <input type="number" wire:model.lazy="cantidad" class="form-control" onkeypress='return validaNumericos(event)'>
         </div>
         @error('cantidad')
             <span class="text-danger er">{{ $message }}</span>
