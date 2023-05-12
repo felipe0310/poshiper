@@ -264,8 +264,11 @@ class Depositos extends Component
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
                              ->where('almacen_id', $this->almacenDestino)
                              ->first();
-
-        if ($inventarioDestino) {                   
+        
+        if ($this->stockIn == 0){
+            $this->resetUI();
+            $this->emit('item-traslado', 'Producto Trasladado');
+        }elseif ($inventarioDestino) {                   
 
             // Validar que el stock no sea mayor
             if ($inventarioOrigen->stock < $this->stockIn) {

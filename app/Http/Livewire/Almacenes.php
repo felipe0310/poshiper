@@ -2,14 +2,16 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Almacen;
 use App\Models\Empresa;
 use Livewire\Component;
-use App\Models\Almacen;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Almacenes extends Component
 {
     use WithPagination;
+    use LivewireAlert; 
 
     protected $paginationTheme = 'bootstrap';
     private $paginacion = 7;
@@ -94,8 +96,13 @@ class Almacenes extends Component
             'entrada' => $this->entrada,
             'salida' => $this->salida        
         ]);
+        
         $this->resetUI();
         $this->emit('item-added', 'Almacen Registrado');
+        $this->alert('success', 'ALMACEN CREADO CON EXITO',[
+        'position' => 'center'
+        ]);
+         
     }
 
     public function Update()
@@ -130,15 +137,22 @@ class Almacenes extends Component
 
         $this->resetUI();
         $this->emit('item-updated', 'Almacen Actualizado');
+        $this->alert('success', 'ALMACEN ACTUALIZADO CON EXITO',[
+        'position' => 'center'
+        ]); 
 
     }
 
     public function Destroy(Almacen $almacen)
     {
         
-        $almacen->delete();
+        $almacen->delete();        
         $this->resetUI();
         $this->emit('item-delete', 'Almacen Eliminado');
+        $this->alert('success', 'ALMACEN ELIMINADO CON EXITO',[
+        'position' => 'center'
+        ]); 
+        
 
     }
 

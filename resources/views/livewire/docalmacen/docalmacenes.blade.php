@@ -90,10 +90,10 @@
 
     function Confirm(id) {
         
-        swal({
+        swal.fire({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             confirmButtonText: 'Aceptar'

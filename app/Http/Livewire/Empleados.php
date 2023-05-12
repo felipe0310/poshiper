@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Empleado;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Empleados extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
 

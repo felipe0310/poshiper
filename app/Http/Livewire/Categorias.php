@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Categoria;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Categorias extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -58,10 +60,14 @@ class Categorias extends Component
 
         $categoria = Categoria::create([
             'nombre' => $this->nombre
-        ]);
+        ]);        
 
         $this->resetUI();
         $this->emit('item-added', 'Categoria Registrada');
+        $this->alert('success', 'CATEGORIA CREADO CON EXITO',[
+        'position' => 'center'
+        ]);
+        
     }
 
     public function Update()
@@ -83,6 +89,9 @@ class Categorias extends Component
         ]);
         $this->resetUI();
         $this->emit('item-updated', 'Categoria Actualizada');
+        $this->alert('success', 'CATEGORIA EDITADA CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 
@@ -92,6 +101,9 @@ class Categorias extends Component
         $categoria->delete();
         $this->resetUI();
         $this->emit('item-delete', 'Categoria Eliminada');
+        $this->alert('success', 'CATEGORIA ELIMINADA CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 

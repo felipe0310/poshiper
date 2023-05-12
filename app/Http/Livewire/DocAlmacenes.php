@@ -6,10 +6,13 @@ use App\Models\Almacen;
 use Livewire\Component;
 use App\Models\DocAlmacen;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class DocAlmacenes extends Component
 {
     use WithPagination;
+    use LivewireAlert;
+    
     protected $paginationTheme = 'bootstrap';
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
     private $paginacion = 7;
@@ -85,6 +88,10 @@ class DocAlmacenes extends Component
 
         $this->resetUI();
         $this->emit('item-added', 'Documento Registrado');
+        $this->alert('success', 'DOCUMENTOS REGISTRADOS CON EXITO',[
+        'position' => 'center'
+        ]);
+
     }
 
     public function Update()
@@ -114,6 +121,9 @@ class DocAlmacenes extends Component
         ]);
         $this->resetUI();
         $this->emit('item-updated', 'Documento Actualizado');
+        $this->alert('success', 'DOCUMENTOS ACTUALIZADOS CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 
@@ -123,6 +133,9 @@ class DocAlmacenes extends Component
         $docalmacen->delete();
         $this->resetUI();
         $this->emit('item-delete', 'Documento Eliminado');
+        $this->alert('success', 'DOCUMENTOS ELIMINADOS CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 

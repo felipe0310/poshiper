@@ -6,10 +6,12 @@ use Livewire\Component;
 use App\Models\Producto;
 use App\Models\Categoria;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Productos extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
 

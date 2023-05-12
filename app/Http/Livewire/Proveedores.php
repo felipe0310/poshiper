@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Proveedor;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Proveedores extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
@@ -76,6 +78,9 @@ class Proveedores extends Component
 
         $this->resetUI();
         $this->emit('item-added', 'Prooveedor Registrado');
+        $this->alert('success', 'PROVEEDOR CREADO CON EXITO',[
+        'position' => 'center'
+        ]);
     }
 
     public function Update()
@@ -107,6 +112,9 @@ class Proveedores extends Component
         ]);
         $this->resetUI();
         $this->emit('item-updated', 'Proveedor Actualizado');
+        $this->alert('success', 'PROVEEDOR ACTUALIZADO CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 
@@ -116,6 +124,9 @@ class Proveedores extends Component
         $categoria->delete();
         $this->resetUI();
         $this->emit('item-delete', 'Proveedor Eliminado');
+        $this->alert('success', 'PROVEEDOR ELIMINADO CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 

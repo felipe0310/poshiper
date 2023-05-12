@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 class InventarioSucursal extends Component
 {
     use WithPagination;
+    
 
     protected $paginationTheme = 'bootstrap';
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;

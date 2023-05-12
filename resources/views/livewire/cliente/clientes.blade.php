@@ -69,21 +69,21 @@
 
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
-            noty(msg)
+            
         })
 
         window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
-            noty(msg)
+            
         })
 
         window.livewire.on('item-delete', msg => {
-            noty(msg)
+            
         })
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
-            noty(msg)
+            
         })
 
         window.livewire.on('show-modal', msg => {
@@ -98,13 +98,16 @@
 
     function Confirm(id,credito_usado) {
         if (credito_usado > 0) {
-            swal('NO SE PUEDE ELIMINAR EL CLIENTE PORQUE MANTIENE DEUDA PENDIENTE')
+            swal.fire({
+                title: 'NO SE PUEDE ELIMINAR EL CLIENTE PORQUE MANTIENE DEUDA PENDIENTE',
+                icon: 'error'
+            })
             return;
         }
-        swal({
+        swal.fire({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             confirmButtonText: 'Aceptar'

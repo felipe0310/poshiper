@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\Empresa;
+use Livewire\Component;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Empresas extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
     public  $buscar, $paginaTitulo, $nombreComponente, $seleccionar_id;

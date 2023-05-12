@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\Cliente;
+use Livewire\Component;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Clientes extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
     public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
@@ -87,6 +89,9 @@ class Clientes extends Component
 
         $this->resetUI();
         $this->emit('item-added', 'Cliente Registrado');
+        $this->alert('success', 'CLIENTE CREADO CON EXITO',[
+        'position' => 'center'
+        ]);
     }
 
     public function Update()
@@ -124,6 +129,9 @@ class Clientes extends Component
         ]);
         $this->resetUI();
         $this->emit('item-updated', 'Cliente Actualizado');
+        $this->alert('success', 'CLIENTE ACTUALIZADO CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 
@@ -133,6 +141,9 @@ class Clientes extends Component
         $cliente->delete();
         $this->resetUI();
         $this->emit('item-delete', 'Cliente Eliminado');
+        $this->alert('success', 'CLIENTE ELIMINADO CON EXITO',[
+        'position' => 'center'
+        ]);
 
     }
 
