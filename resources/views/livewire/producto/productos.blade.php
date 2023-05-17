@@ -15,13 +15,14 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 layout-spacing">
             <div class="statbox widget box box-shadow">
-                <div class="widget-content widget-content-area">                   
-                    <div class="table-responsive">                       
+                <div class="widget-content widget-content-area">
+                    <div class="table-responsive">
                         @include('common.searchbox')
                         <table class="table table-bordered mb-4">
                             <div>
-                            <a href="{{ url('productos/export') }}" class="btn btn-info mb-4">Exportar productos a Excel</a>
-                        </div>
+                                <a href="{{ url('productos/export') }}" class="btn btn-info mb-4">Exportar productos a
+                                    Excel</a>
+                            </div>
                             <thead>
                                 <tr>
                                     <th>Código</th>
@@ -51,7 +52,7 @@
 
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
-                                                wire:click="Edit('{{ $producto->id }}')" title="Editar">
+                                                wire:click="Edit({{ $producto->id }})" title="Editar">
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"

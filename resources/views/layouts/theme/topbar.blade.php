@@ -80,6 +80,9 @@
                     <li>
                         <a href="{{url('/bodega')}}"> Bodega </a>
                     </li>
+                    <li>
+                        <a href="{{url('/compras')}}"> Compras </a>
+                    </li>
                     
                 </ul>
             </li>
