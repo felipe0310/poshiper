@@ -60,6 +60,11 @@ class Almacenes extends Component
         $this->nombreComponente = 'Almacenes';
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         if (strlen($this->buscar) > 0) {

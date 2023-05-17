@@ -30,6 +30,11 @@ class InventarioSucursal extends Component
 
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $inventarios = Inventario::with('productos.categorias', 'almacenes')->get();

@@ -54,6 +54,11 @@ class DocAlmacenes extends Component
         $this->nombreComponente = 'Doc. Almacenes';
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         if (strlen($this->buscar) > 0) {

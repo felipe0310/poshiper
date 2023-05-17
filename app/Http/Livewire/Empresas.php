@@ -58,6 +58,11 @@ class Empresas extends Component
         $this->nombreComponente = 'Empresas';
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         if (strlen($this->buscar) > 0) {

@@ -43,3 +43,5 @@ Route::get('docAlmacenes', DocAlmacenes::class);
 Route::get('empleados', Empleados::class);
 Route::get('inventarios', InventarioSucursal::class);
 Route::get('inventario/{id}', Inventarios::class);
+Route::get('/productos/export', [Productos::class, 'export']);
+

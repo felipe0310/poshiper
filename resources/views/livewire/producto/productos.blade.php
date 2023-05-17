@@ -15,23 +15,24 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 layout-spacing">
             <div class="statbox widget box box-shadow">
-                <div class="widget-content widget-content-area">
-                    <div class="table-responsive">
+                <div class="widget-content widget-content-area">                   
+                    <div class="table-responsive">                       
                         @include('common.searchbox')
                         <table class="table table-bordered mb-4">
+                            <div>
+                            <a href="{{ url('productos/export') }}" class="btn btn-info mb-4">Exportar productos a Excel</a>
+                        </div>
                             <thead>
                                 <tr>
-                                    <th>Código de Barras</th>
+                                    <th>Código</th>
                                     <th>Descripción</th>
                                     <th>Proveedor</th>
-                                    <th>Cantidad Bulto</th>                                    
-                                    <th>Precio Compra</th>
-                                    <th>Precio Venta</th>
-                                    <th>Precio Mayoreo</th>
-                                    <th>Precio Oferta</th>
+                                    <th>Cant. Bulto</th>
+                                    <th>P. Costo</th>
+                                    <th>P. Venta</th>
+                                    <th>P. Mayoreo</th>
+                                    <th>P. Oferta</th>
                                     <th>Categoria</th>
-                                    
-
                                     <th class="text-center">Acción</th>
                                 </tr>
                             </thead>
@@ -41,13 +42,12 @@
                                         <td>{{ $producto->codigo_barras }}</td>
                                         <td>{{ $producto->descripcion }}</td>
                                         <td>{{ $producto->proveedores }}</td>
-                                        <td>{{ $producto->cantidad_caja }}</td>                                        
+                                        <td>{{ $producto->cantidad_caja }}</td>
                                         <td>${{ number_format($producto->precio_compra, 0, ',', '.') }}</td>
                                         <td>${{ number_format($producto->precio_venta, 0, ',', '.') }}</td>
                                         <td>${{ number_format($producto->precio_mayoreo, 0, ',', '.') }}</td>
                                         <td>${{ number_format($producto->precio_oferta, 0, ',', '.') }}</td>
                                         <td>{{ $producto->categorias }}</td>
-                                        
 
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"

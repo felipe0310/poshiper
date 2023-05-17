@@ -91,6 +91,11 @@ class Inventarios extends Component
 
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $almacen = Almacen::find($this->almacen_id);

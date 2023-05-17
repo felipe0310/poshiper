@@ -16,9 +16,6 @@ class Proveedor extends Model
     protected $fillable =
     [
         'nombre',
-        'direccion',
-        'telefono',
-        'email',
     ];
 
     protected $guarded = [];

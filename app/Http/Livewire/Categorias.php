@@ -42,6 +42,11 @@ class Categorias extends Component
         $this->nombreComponente = 'Categorías';
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         if (strlen($this->buscar) > 0) {

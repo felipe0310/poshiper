@@ -62,6 +62,11 @@ class Empleados extends Component
         $this->nombreComponente = 'Empleados';
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         if (strlen($this->buscar) > 0) {

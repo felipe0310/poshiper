@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire;
 
-use App\Imports\ProductosImport;
-use App\Models\Categoria;
-use App\Models\Producto;
-use App\Models\Proveedor;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Models\Producto;
+use App\Models\Categoria;
+use App\Models\Proveedor;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use App\Exports\ProductosExport;
+use App\Imports\ProductosImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Productos extends Component
 {
@@ -90,11 +91,17 @@ class Productos extends Component
         $this->cantidad_caja = 0;
     }
 
+    public function updatingBuscar()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         if (strlen($this->buscar) > 0) {
             $productos = Producto::join('categorias as c', 'c.id', 'productos.categoria_id')
-                ->select('productos.*', ('c.nombre as categorias'))
+                ->join('proveedores as pr', 'pr.id', 'productos.proveedor_id')
+                ->select('productos.*', 'c.nombre as categorias', 'pr.nombre as proveedores')
                 ->where('productos.descripcion', 'like', '%'.$this->buscar.'%')
                 ->orWhere('productos.codigo_barras', 'like', '%'.$this->buscar.'%')
                 ->orWhere('c.nombre', 'like', '%'.$this->buscar.'%')
@@ -272,6 +279,11 @@ class Productos extends Component
             session()->flash('import_errors', $failures);
         }
 
+    }
+
+    public function export() 
+    {
+        return Excel::download(new ProductosExport, 'productos.xlsx');
     }
 
      public function closeModal()

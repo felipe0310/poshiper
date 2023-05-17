@@ -19,9 +19,6 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Dirección</th>
-                                    <th>Teléfono</th>
-                                    <th>Email</th>
                                     <th class="text-center">Acción</th>
                                 </tr>
                             </thead>
@@ -29,16 +26,15 @@
                                 @forelse ($proveedores as $proveedor)
                                     <tr>
                                         <td>{{ $proveedor->nombre }}</td>
-                                        <td>{{ $proveedor->direccion }}</td>
-                                        <td>{{ $proveedor->telefono }}</td>
-                                        <td>{{ $proveedor->email }}</td>
+
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
                                                 wire:click="Edit('{{ $proveedor->id }}')" title="Editar">
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $proveedor->id }}'" title="Eliminar">
+                                                onclick="Confirm('{{ $proveedor->id }}','{{ $productos->count() }}')"
+                                                title="Eliminar">
                                                 <i class="fas fa-trash" aria-hidden="true"></i>
                                             </a>
                                         </td>
@@ -50,8 +46,8 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        {{ $proveedores->links() }}
                     </div>
+                    {{ $proveedores->links() }}
                 </div>
             </div>
         </div>
@@ -90,14 +86,14 @@
 
     });
 
-    function Confirm(id) {
-        //if (productos > 0) {
-        //   swal.fire({
-        //    title:'NO SE PUEDE ELIMINAR LA CATEGORIA PORQUE TIENE PRODUCTOS RELACIONADOS',
-        //    icon: 'error'
-        //})
-        //   return;
-        //}
+    function Confirm(id, productos) {
+        if (productos > 0) {
+            swal.fire({
+                title: 'NO SE PUEDE ELIMINAR EL PROVEEDOR PORQUE TIENE PRODUCTOS RELACIONADOS',
+                icon: 'error'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
