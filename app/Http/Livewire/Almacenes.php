@@ -37,11 +37,11 @@ class Almacenes extends Component
 
     protected $rules =
     [
-       'empresa_id' => 'required',
-       'descripcion' => 'required|unique:almacenes,descripcion',
-       'ubicacion' => 'required',
-       'entrada' => 'required',
-       'salida' => 'required',
+        'empresa_id' => 'required',
+        'descripcion' => 'required|unique:almacenes,descripcion',
+        'ubicacion' => 'required',
+        'entrada' => 'required',
+        'salida' => 'required',
     ];
 
     protected $messages = [

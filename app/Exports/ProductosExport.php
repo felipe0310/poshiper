@@ -4,32 +4,32 @@ namespace App\Exports;
 
 use App\Models\Producto;
 use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ProductosExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithColumnFormatting
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function query()
     {
         return Producto::query()
             ->join('categorias', 'productos.categoria_id', '=', 'categorias.id')
             ->join('proveedores', 'productos.proveedor_id', '=', 'proveedores.id')
             ->select('codigo_barras',
-            'descripcion',
-            'precio_compra',
-            'precio_venta',
-            'precio_mayoreo',
-            'precio_oferta',
-            'categorias.nombre as categoria_id',
-            'proveedores.nombre as proveedor_id',
-            'cantidad_caja');
-        
+                'descripcion',
+                'precio_compra',
+                'precio_venta',
+                'precio_mayoreo',
+                'precio_oferta',
+                'categorias.nombre as categoria_id',
+                'proveedores.nombre as proveedor_id',
+                'cantidad_caja');
+
     }
 
     public function headings(): array
@@ -74,5 +74,4 @@ class ProductosExport implements FromQuery, WithHeadings, WithMapping, ShouldAut
             'I' => NumberFormat::FORMAT_NUMBER,
         ];
     }
-
 }

@@ -36,11 +36,11 @@ class Empresas extends Component
 
     protected $rules =
     [
-       'rut' => 'required|unique:empresas',
-       'razon_social' => 'required',
-       'direccion' => 'required',
-       'email' => 'required',
-       'iva' => 'required',
+        'rut' => 'required|unique:empresas',
+        'razon_social' => 'required',
+        'direccion' => 'required',
+        'email' => 'required',
+        'iva' => 'required',
     ];
 
     protected $messages = [

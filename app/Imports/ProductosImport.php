@@ -2,14 +2,14 @@
 
 namespace App\Imports;
 
-use App\Models\Producto;
 use App\Models\Categoria;
+use App\Models\Producto;
 use App\Models\Proveedor;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 
 class ProductosImport implements ToModel, WithHeadingRow, WithValidation, WithChunkReading, ShouldQueue
 {
@@ -65,7 +65,4 @@ class ProductosImport implements ToModel, WithHeadingRow, WithValidation, WithCh
     {
         return 100; // Elige un tamaño de lote adecuado según tu entorno y necesidades
     }
-
-
-
 }

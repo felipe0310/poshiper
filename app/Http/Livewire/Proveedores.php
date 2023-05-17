@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\Producto;
 use App\Models\Proveedor;
-use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Proveedores extends Component
 {
@@ -130,7 +130,7 @@ class Proveedores extends Component
     {
         $this->seleccionar_id = 0;
         $this->resetValidation();
-        $this->nombre = "";
+        $this->nombre = '';
 
     }
 }

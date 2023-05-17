@@ -2,16 +2,16 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
-use App\Models\Producto;
-use App\Models\Categoria;
-use App\Models\Proveedor;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use App\Exports\ProductosExport;
 use App\Imports\ProductosImport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Categoria;
+use App\Models\Producto;
+use App\Models\Proveedor;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Productos extends Component
 {
@@ -281,7 +281,7 @@ class Productos extends Component
 
     }
 
-    public function export() 
+    public function export()
     {
         return Excel::download(new ProductosExport, 'productos.xlsx');
     }
