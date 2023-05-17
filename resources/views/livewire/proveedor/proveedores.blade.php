@@ -17,7 +17,7 @@
                         @include('common.searchbox')
                         <table class="table table-bordered mb-4">
                             <thead>
-                                <tr>                                    
+                                <tr>
                                     <th>Nombre</th>
                                     <th>Dirección</th>
                                     <th>Teléfono</th>
@@ -26,7 +26,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($proveedores as $proveedor)
+                                @forelse ($proveedores as $proveedor)
                                     <tr>
                                         <td>{{ $proveedor->nombre }}</td>
                                         <td>{{ $proveedor->direccion }}</td>
@@ -38,13 +38,16 @@
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $proveedor->id }}'"
-                                                title="Eliminar">
+                                                onclick="Confirm('{{ $proveedor->id }}'" title="Eliminar">
                                                 <i class="fas fa-trash" aria-hidden="true"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="6">No se encontraron productos</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                         {{ $proveedores->links() }}
@@ -61,20 +64,20 @@
 
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
-                   })
+        })
 
         window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('item-delete', msg => {
-            
+
         })
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('show-modal', msg => {

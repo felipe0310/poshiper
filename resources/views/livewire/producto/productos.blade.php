@@ -7,6 +7,9 @@
             <a href="javascript:void(0)" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#theModal">
                 Agregar
             </a>
+            <a href="javascript:void(0)" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#masivaModal">
+                Carga Masiva
+            </a>
         </div>
     </div>
     <div class="row">
@@ -18,41 +21,50 @@
                         <table class="table table-bordered mb-4">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
                                     <th>Código de Barras</th>
+                                    <th>Descripción</th>
+                                    <th>Proveedor</th>
+                                    <th>Cantidad Bulto</th>                                    
                                     <th>Precio Compra</th>
                                     <th>Precio Venta</th>
                                     <th>Precio Mayoreo</th>
                                     <th>Precio Oferta</th>
-                                    <th>Categoria</th>                                    
+                                    <th>Categoria</th>
+                                    
 
                                     <th class="text-center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($productos as $producto)
+                                @forelse ($productos as $producto)
                                     <tr>
-                                        <td>{{ $producto->descripcion }}</td>
                                         <td>{{ $producto->codigo_barras }}</td>
-                                        <td>${{number_format($producto->precio_compra,0,",",".")}}</td>
-                                        <td>${{number_format( $producto->precio_venta,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_mayoreo,0,",",".") }}</td>
-                                        <td>${{number_format( $producto->precio_oferta,0,",",".") }}</td>
-                                        <td>{{ $producto->categorias}}</td>                                       
+                                        <td>{{ $producto->descripcion }}</td>
+                                        <td>{{ $producto->proveedores }}</td>
+                                        <td>{{ $producto->cantidad_caja }}</td>                                        
+                                        <td>${{ number_format($producto->precio_compra, 0, ',', '.') }}</td>
+                                        <td>${{ number_format($producto->precio_venta, 0, ',', '.') }}</td>
+                                        <td>${{ number_format($producto->precio_mayoreo, 0, ',', '.') }}</td>
+                                        <td>${{ number_format($producto->precio_oferta, 0, ',', '.') }}</td>
+                                        <td>{{ $producto->categorias }}</td>
                                         
+
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-warning"
                                                 wire:click="Edit('{{ $producto->id }}')" title="Editar">
                                                 <i class="fas fa-edit" aria-hidden="true"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $producto->id }}')"
-                                                title="Eliminar">
+                                                onclick="Confirm('{{ $producto->id }}')" title="Eliminar">
                                                 <i class="fas fa-trash" aria-hidden="true"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="8">No se encontraron productos</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                         {{ $productos->links() }}
@@ -61,6 +73,7 @@
             </div>
         </div>
         @include('livewire.producto.form')
+        @include('livewire.producto.form-cargamasiva')
     </div>
 </div>
 
@@ -69,22 +82,31 @@
 
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('item-delete', msg => {
-            
+
+        })
+
+        window.livewire.on('masivaModal-modal', msg => {
+            $('#masivaModal').modal('hide');
+
+        })
+
+        window.livewire.on('masivaModal-show', msg => {
+            $('#masivaModal').modal('show')
         })
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
-            
-        })        
+
+        })
 
         window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')

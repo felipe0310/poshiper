@@ -3,9 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Models\Cliente;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Clientes extends Component
 {
@@ -13,67 +13,89 @@ class Clientes extends Component
     use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
-    public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
+
+    public $buscar;
+
+    public $seleccionar_id;
+
+    public $paginaTitulo;
+
+    public $nombreComponente;
+
     private $paginacion = 7;
 
-    public $rut, $nombre, $apellido, $direccion, $limite_credito, $credito_usado, $telefono, $descuento;
-    
+    public $rut;
+
+    public $nombre;
+
+    public $apellido;
+
+    public $direccion;
+
+    public $limite_credito;
+
+    public $credito_usado;
+
+    public $telefono;
+
+    public $descuento;
 
     protected $rules = [
-            'rut' => 'required|unique:clientes',
-            'nombre' => 'required|unique:clientes',
-            'apellido' => 'required',
-            'direccion' => 'required',
-            'telefono' => 'required',
-            'descuento' => 'max:1',
-        ];
+        'rut' => 'required|unique:clientes',
+        'nombre' => 'required|unique:clientes',
+        'apellido' => 'required',
+        'direccion' => 'required',
+        'telefono' => 'required',
+        'descuento' => 'max:1',
+    ];
 
     protected $messages = [
-            'rut.required' => 'El rut del cliente es requerido.',
-            'rut.unique' => 'El rut del cliente ya existe.',
-            'nombre.required' => 'El nombre del cliente es requerido.',
-            'nombre.unique' => 'El nombre del cliente ya existe.',
-            'direccion.required' => 'La dirección del cliente es requerida.',
-            'telefono.required' => 'El teléfono del cliente es requerido.',
-            'descuento.max' => 'El descuento debe ser 5.',
-        ];
+        'rut.required' => 'El rut del cliente es requerido.',
+        'rut.unique' => 'El rut del cliente ya existe.',
+        'nombre.required' => 'El nombre del cliente es requerido.',
+        'nombre.unique' => 'El nombre del cliente ya existe.',
+        'direccion.required' => 'La dirección del cliente es requerida.',
+        'telefono.required' => 'El teléfono del cliente es requerido.',
+        'descuento.max' => 'El descuento debe ser 5.',
+    ];
 
     public function mount()
     {
         $this->paginaTitulo = 'Listado';
         $this->nombreComponente = 'Clientes';
-        
-    }    
+
+    }
 
     public function render()
     {
-        if(strlen($this->buscar) > 0)
+        if (strlen($this->buscar) > 0) {
             $data = Cliente::where('nombre', 'like', '%'.$this->buscar.'%')->paginate($this->paginacion);
-        else
-            $data = Cliente::orderBy('nombre','asc')->paginate($this->paginacion);
+        } else {
+            $data = Cliente::orderBy('nombre', 'asc')->paginate($this->paginacion);
+        }
 
-        return view('livewire.cliente.clientes',['clientes'=>$data])
-        ->extends('layouts.theme.app')
-        ->section('content');
+        return view('livewire.cliente.clientes', ['clientes' => $data])
+            ->extends('layouts.theme.app')
+            ->section('content');
     }
 
-    public function Edit($id)           
+    public function Edit($id)
     {
-       $cliente = Cliente::find($id, ['id','nombre','direccion','telefono','limite_credito','rut','apellido','descuento']);
-       $this->seleccionar_id = $cliente->id;
-       $this->rut = $cliente->rut;
-       $this->nombre = $cliente->nombre;
-       $this->apellido = $cliente->apellido;
-       $this->direccion = $cliente->direccion;
-       $this->telefono = $cliente->telefono;
-       $this->limite_credito = $cliente->limite_credito;
-       $this->descuento = $cliente->descuento;       
+        $cliente = Cliente::find($id, ['id', 'nombre', 'direccion', 'telefono', 'limite_credito', 'rut', 'apellido', 'descuento']);
+        $this->seleccionar_id = $cliente->id;
+        $this->rut = $cliente->rut;
+        $this->nombre = $cliente->nombre;
+        $this->apellido = $cliente->apellido;
+        $this->direccion = $cliente->direccion;
+        $this->telefono = $cliente->telefono;
+        $this->limite_credito = $cliente->limite_credito;
+        $this->descuento = $cliente->descuento;
 
-       $this->emit('show-modal','show modal!');   
+        $this->emit('show-modal', 'show modal!');
     }
 
     public function Store()
-    {       
+    {
         $this->validate();
 
         $Cliente = Cliente::create([
@@ -84,13 +106,13 @@ class Clientes extends Component
             'telefono' => $this->telefono,
             'limite_credito' => $this->limite_credito,
             'descuento' => $this->descuento,
-            
+
         ]);
 
         $this->resetUI();
         $this->emit('item-added', 'Cliente Registrado');
-        $this->alert('success', 'CLIENTE CREADO CON EXITO',[
-        'position' => 'center'
+        $this->alert('success', 'CLIENTE CREADO CON EXITO', [
+            'position' => 'center',
         ]);
     }
 
@@ -103,7 +125,7 @@ class Clientes extends Component
             'apellido' => 'required',
             'direccion' => 'required',
             'telefono' => 'required',
-            'descuento' => 'max:1',             
+            'descuento' => 'max:1',
         ];
 
         $messages = [
@@ -113,10 +135,10 @@ class Clientes extends Component
             'nombre.unique' => 'El nombre del cliente ya existe.',
             'direccion.required' => 'La dirección del cliente es requerida.',
             'telefono.required' => 'El teléfono del cliente es requerido.',
-            'descuento.max' => 'El descuento debe ser 5.',            
-        ];        
+            'descuento.max' => 'El descuento debe ser 5.',
+        ];
 
-        $this->validate($rules,$messages);
+        $this->validate($rules, $messages);
         $cliente = Cliente::find($this->seleccionar_id);
         $cliente->update([
             'rut' => $this->rut,
@@ -129,8 +151,8 @@ class Clientes extends Component
         ]);
         $this->resetUI();
         $this->emit('item-updated', 'Cliente Actualizado');
-        $this->alert('success', 'CLIENTE ACTUALIZADO CON EXITO',[
-        'position' => 'center'
+        $this->alert('success', 'CLIENTE ACTUALIZADO CON EXITO', [
+            'position' => 'center',
         ]);
 
     }
@@ -141,19 +163,19 @@ class Clientes extends Component
         $cliente->delete();
         $this->resetUI();
         $this->emit('item-delete', 'Cliente Eliminado');
-        $this->alert('success', 'CLIENTE ELIMINADO CON EXITO',[
-        'position' => 'center'
+        $this->alert('success', 'CLIENTE ELIMINADO CON EXITO', [
+            'position' => 'center',
         ]);
 
     }
 
     protected $listeners = [
-        'deleteRow' => 'Destroy'
+        'deleteRow' => 'Destroy',
     ];
 
     public function resetUI()
     {
-        $this->buscar =  '';
+        $this->buscar = '';
         $this->seleccionar_id = 0;
         $this->resetValidation();
 
@@ -163,10 +185,7 @@ class Clientes extends Component
         $this->direccion = '';
         $this->telefono = '';
         $this->limite_credito = '';
-         $this->descuento = '';
-        
+        $this->descuento = '';
+
     }
-
-
-
 }

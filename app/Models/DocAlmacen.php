@@ -2,22 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\Almacen;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class DocAlmacen extends Model
 {
     use HasFactory;
+
     protected $table = 'doc_almacenes';
+
     protected $primaryKey = 'id';
-   
+
     protected $fillable =
     [
         'almacen_id',
         'documento',
         'serie',
-        'cantidad'
+        'cantidad',
     ];
 
     public function productos()

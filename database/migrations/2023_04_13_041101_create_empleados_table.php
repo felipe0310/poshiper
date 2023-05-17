@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('direccion');
             $table->string('rut');
-            $table->string('email');            
+            $table->string('email');
             $table->timestamps();
         });
     }

@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use App\Models\Empresa;
-use App\Models\DocAlmacen;
-use App\Models\Inventario;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Almacen extends Model
 {
     use HasFactory;
+
     protected $table = 'almacenes';
-    protected $primaryKey = 'id';    
+
+    protected $primaryKey = 'id';
 
     protected $fillable =
     [
@@ -20,7 +19,7 @@ class Almacen extends Model
         'descripcion',
         'ubicacion',
         'entrada',
-        'salida'
+        'salida',
     ];
 
     public function empresas()
@@ -32,11 +31,11 @@ class Almacen extends Model
     {
         return $this->belongsTo(DocAlmacen::class); // pertenece a una empresa
     }
-    
+
     public function inventarios()
     {
         return $this->hasMany(DocAlmacen::class); // pertenece a una empresa
-    } 
+    }
 
     protected $guarded = [];
 }

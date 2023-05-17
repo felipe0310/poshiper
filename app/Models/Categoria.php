@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\Producto;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model
 {
     use HasFactory;
+
     protected $table = 'categorias';
+
     protected $primaryKey = 'id';
-   
+
     protected $fillable =
     [
-        'nombre'
+        'nombre',
     ];
 
     public function productos()
@@ -23,6 +24,4 @@ class Categoria extends Model
     }
 
     protected $guarded = [];
-
-    
 }

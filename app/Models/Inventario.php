@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use App\Models\Almacen;
-use App\Models\Producto;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Inventario extends Model
 {
     use HasFactory;
 
     protected $table = 'inventarios';
-    protected $primaryKey = 'id';    
+
+    protected $primaryKey = 'id';
 
     protected $fillable =
     [
@@ -20,7 +19,7 @@ class Inventario extends Model
         'producto_id',
         'usuario_id',
         'stock',
-        'stock_minimo'
+        'stock_minimo',
     ];
 
     public function almacenes()

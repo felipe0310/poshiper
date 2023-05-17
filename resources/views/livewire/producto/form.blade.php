@@ -5,7 +5,7 @@
             <span><strong>Nombre</strong></span>
         </div>
         <div class="input-group">
-            <input type="text" wire:model.lazy="descripcion" class="form-control">
+            <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="Ingrese el nombre o descripción del producto">
         </div>
         @error('descripcion')
             <span class="text-danger er">{{ $message }}</span>
@@ -51,13 +51,13 @@
         <div class="mb-2 mt-2">
             <span><strong>Proveedor</strong></span>
         </div>
-        <select class="custom-select col-12" wire:model="categoria_id">
+        <select class="custom-select col-12" wire:model="proveedor_id">
             <option selected>Seleccione el Proveedor</option>
-            @foreach ($categorias as $categoria)
-                <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+            @foreach ($proveedores as $proveedor)
+                <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
             @endforeach
         </select>
-        @error('categoria_id')
+        @error('proveedor_id')
             <span class="text-danger er">{{ $message }}</span>
         @enderror
     </div>
@@ -91,6 +91,17 @@
             <input type="number" wire:model.lazy="precio_oferta" class="form-control" onkeypress='return validaNumericos(event)'>
         </div>
         @error('precio_oferta')
+            <span class="text-danger er">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <div class="mb-2 mt-2">
+            <span><strong>Cantidad por Manga o Caja</strong></span>
+        </div>
+        <div class="input-group">
+            <input type="number" wire:model.lazy="cantidad_caja" class="form-control" onkeypress='return validaNumericos(event)'>
+        </div>
+        @error('cantidad_caja')
             <span class="text-danger er">{{ $message }}</span>
         @enderror
     </div>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('compra_id')->constrained('compras');
             $table->string('codigo_producto');
             $table->integer('cantidad');
-            $table->float('total_compra', 8, 2);            
+            $table->float('total_compra', 8, 2);
             $table->timestamps();
         });
     }

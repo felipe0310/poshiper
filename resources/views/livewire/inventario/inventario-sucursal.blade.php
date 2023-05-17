@@ -83,7 +83,6 @@
         @include('livewire.inventario.form-restar')
         @include('livewire.inventario.form-edit')
     </div>
-
 </div>
 
 <script>

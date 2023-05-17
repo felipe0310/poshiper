@@ -2,23 +2,24 @@
 
 namespace App\Models;
 
-use App\Models\Almacen;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Empresa extends Model
 {
     use HasFactory;
+
     protected $table = 'empresas';
+
     protected $primaryKey = 'id';
-   
+
     protected $fillable =
     [
         'rut',
         'razon_social',
         'direccion',
         'email',
-        'iva'
+        'iva',
     ];
 
     public function almacenes()

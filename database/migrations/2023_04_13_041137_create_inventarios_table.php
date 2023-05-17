@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('almacen_id')->constrained('almacenes');
             $table->foreignId('producto_id')->constrained('productos');
-            $table->foreignId('usuario_id')->constrained('users');            
+            $table->foreignId('usuario_id')->constrained('users');
             $table->integer('stock');
             $table->integer('stock_minimo');
             $table->timestamps();

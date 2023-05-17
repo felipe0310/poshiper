@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-use App\Models\Deposito;
-use App\Models\Categoria;
-use App\Models\Inventario;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
 {
     use HasFactory;
+
     protected $table = 'productos';
-    protected $primaryKey = 'id';    
+
+    protected $primaryKey = 'id';
 
     protected $fillable =
     [
@@ -24,6 +22,8 @@ class Producto extends Model
         'precio_mayoreo',
         'precio_oferta',
         'categoria_id',
+        'proveedor_id',
+        'cantidad_caja',
     ];
 
     public function categorias()

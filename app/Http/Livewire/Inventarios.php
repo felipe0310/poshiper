@@ -3,25 +3,56 @@
 namespace App\Http\Livewire;
 
 use App\Models\Almacen;
-use Livewire\Component;
-use App\Models\Producto;
 use App\Models\Inventario;
-use Illuminate\Http\Request;
-use Livewire\WithPagination;
+use App\Models\Producto;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Inventarios extends Component
 {
     use WithPagination;
-    use LivewireAlert;       
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
-    public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
+
+    public $buscar;
+
+    public $seleccionar_id;
+
+    public $paginaTitulo;
+
+    public $nombreComponente;
+
     private $paginacion = 7;
 
-    public $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo, 
-           $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, 
-           $inventarioDestino, $producto, $nombreProducto, $stockIn = 0, $productosAgregar;    
+    public $almacen_id;
+
+    public $producto_id;
+
+    public $usuario_id;
+
+    public $stock;
+
+    public $stock_minimo;
+
+    public $sucursalNombre;
+
+    public $almacenOrigen;
+
+    public $almacenDestino;
+
+    public $inventarioOrigen;
+
+    public $inventarioDestino;
+
+    public $producto;
+
+    public $nombreProducto;
+
+    public $stockIn = 0;
+
+    public $productosAgregar;
 
     protected $rules =
     [
@@ -29,7 +60,7 @@ class Inventarios extends Component
         'almacenDestino' => 'required',
         'producto_id' => 'required',
         'stock' => 'required',
-        'stock_minimo' => 'required'
+        'stock_minimo' => 'required',
     ];
 
     protected $messages = [
@@ -38,165 +69,164 @@ class Inventarios extends Component
         'almacenDestino.' => 'El Almacen de destino es requerido',
         'producto_id' => 'El producto es requerido',
         'stock.required' => 'El stock es requerido.',
-        'stock_minimo.required' => 'El stock minimo es requerido.',        
+        'stock_minimo.required' => 'El stock minimo es requerido.',
     ];
 
     public function mount($id)
-    {        
+    {
         $this->paginaTitulo = 'Listado';
         $this->nombreComponente = 'Inventarios';
-        $this->almacen_id = $id;  
+        $this->almacen_id = $id;
 
         $almacen = Almacen::find($id);
         $this->sucursalNombre = $almacen->descripcion;
 
         $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
-                $join->on('productos.id', '=', 'inventarios.producto_id')
-                    ->where('inventarios.almacen_id', '=', $this->almacen_id);
-            })
+            $join->on('productos.id', '=', 'inventarios.producto_id')
+                ->where('inventarios.almacen_id', '=', $this->almacen_id);
+        })
             ->whereNull('inventarios.id')
             ->select('productos.*')
             ->get();
-                                          
-    } 
+
+    }
 
     public function render()
-    {   
+    {
         $almacen = Almacen::find($this->almacen_id);
 
-        if(strlen($this->buscar) > 0)
-            $inventarios = 
-            Inventario::join('productos as p','p.id','inventarios.producto_id')
-            ->join('almacenes as a','a.id','inventarios.almacen_id')
-            ->with('almacenes','productos.categorias')
-            ->select('inventarios.*','p.descripcion')
-            ->where('inventarios.almacen_id', '=', $this->almacen_id)
-            ->where('p.descripcion','like','%' . $this->buscar . '%')
-            ->orWhere('p.codigo_barras','like','%' . $this->buscar . '%')            
-            ->orderBy('p.descripcion', 'asc')
-            ->paginate($this->paginacion);      
-        
-        else
+        if (strlen($this->buscar) > 0) {
+            $inventarios =
+            Inventario::join('productos as p', 'p.id', 'inventarios.producto_id')
+                ->join('almacenes as a', 'a.id', 'inventarios.almacen_id')
+                ->with('almacenes', 'productos.categorias')
+                ->select('inventarios.*', 'p.descripcion')
+                ->where('inventarios.almacen_id', '=', $this->almacen_id)
+                ->where('p.descripcion', 'like', '%'.$this->buscar.'%')
+                ->orWhere('p.codigo_barras', 'like', '%'.$this->buscar.'%')
+                ->orderBy('p.descripcion', 'asc')
+                ->paginate($this->paginacion);
+        } else {
+            $inventarios =
+                Inventario::join('productos as p', 'p.id', 'inventarios.producto_id')
+                    ->join('almacenes as a', 'a.id', 'inventarios.almacen_id')
+                    ->with('almacenes', 'productos.categorias')
+                    ->where('inventarios.almacen_id', '=', $this->almacen_id)
+                    ->select('inventarios.*', 'p.descripcion')
+                    ->orderBy('p.descripcion', 'asc')
+                    ->paginate($this->paginacion);
+        }
 
-            $inventarios = 
-            Inventario::join('productos as p','p.id','inventarios.producto_id')
-            ->join('almacenes as a','a.id','inventarios.almacen_id')
-            ->with('almacenes','productos.categorias')
-            ->where('inventarios.almacen_id', '=', $this->almacen_id)
-            ->select('inventarios.*','p.descripcion')         
-            ->orderBy('p.descripcion', 'asc')
-            ->paginate($this->paginacion);         
-
-        return view('livewire.inventario.inventario-sucursal',[
+        return view('livewire.inventario.inventario-sucursal', [
             'inventarios' => $inventarios,
             'productos' => Producto::all(),
             'almacenes' => Almacen::all(),
-            'almacen' => $almacen
-            ])
+            'almacen' => $almacen,
+        ])
             ->extends('layouts.theme.app')
-            ->section('content');              
+            ->section('content');
     }
-    
+
     public function agregarProducto($producto_id)
-    {        
+    {
         // crear un nuevo registro en el inventario
         Inventario::create([
             'almacen_id' => $this->almacen_id,
             'producto_id' => $producto_id,
             'usuario_id' => 1,
             'stock' => 0,
-            'stock_minimo' => 0,            
+            'stock_minimo' => 0,
         ]);
 
         // actualizar la lista de productos
         $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
-                $join->on('productos.id', '=', 'inventarios.producto_id')
-                    ->where('inventarios.almacen_id', '=', $this->almacen_id);
-            })
+            $join->on('productos.id', '=', 'inventarios.producto_id')
+                ->where('inventarios.almacen_id', '=', $this->almacen_id);
+        })
             ->whereNull('inventarios.id')
             ->select('productos.*')
-            ->get(); 
-        
+            ->get();
+
         // mostrar un mensaje de éxito
         $this->resetUI();
-        $this->alert('success', 'PRODUCTO AGREGADO CON EXITO',[
-        'position' => 'center'
-        ]);        
-    }    
-    
-    public function Edit(Inventario $inventario)           
-    {
-       $this->seleccionar_id = $inventario->id;
-       $this->almacen_id = $inventario->almacen_id;
-       $this->producto_id = $inventario->producto_id;
-       $this->usuario_id = $inventario->usuario_id;
-       $this->stock = $inventario->stock;
-       $this->stock_minimo = $inventario->stock_minimo;
+        $this->alert('success', 'PRODUCTO AGREGADO CON EXITO', [
+            'position' => 'center',
+        ]);
+    }
 
-       $this->emit('modal-show-editar','show modal!');      
-        
+    public function Edit(Inventario $inventario)
+    {
+        $this->seleccionar_id = $inventario->id;
+        $this->almacen_id = $inventario->almacen_id;
+        $this->producto_id = $inventario->producto_id;
+        $this->usuario_id = $inventario->usuario_id;
+        $this->stock = $inventario->stock;
+        $this->stock_minimo = $inventario->stock_minimo;
+
+        $this->emit('modal-show-editar', 'show modal!');
+
     }
 
     public function Update()
-    {   
-        
+    {
+
         $rules =
     [
         'producto_id' => "required|unique:productos,id,{$this->producto_id}",
         'stock' => 'required',
-        'stock_minimo' => 'required'
+        'stock_minimo' => 'required',
     ];
 
-    $messages = [
-        'producto_id' => 'El producto es requerido',
-        'stock.required' => 'El stock es requerido.',
-        'stock_minimo.required' => 'El stock minimo es requerido.',        
-    ];
-                
-        $this->validate($rules,$messages);
+        $messages = [
+            'producto_id' => 'El producto es requerido',
+            'stock.required' => 'El stock es requerido.',
+            'stock_minimo.required' => 'El stock minimo es requerido.',
+        ];
+
+        $this->validate($rules, $messages);
         $inventario = Inventario::find($this->seleccionar_id);
         $inventario->update([
             'almacen_id' => $this->almacen_id,
             'producto_id' => $this->producto_id,
             'usuario_id' => 1,
             'stock' => $this->stock,
-            'stock_minimo' => $this->stock_minimo 
+            'stock_minimo' => $this->stock_minimo,
         ]);
-        
+
         $this->resetUI();
-        $this->emit('item-editar','hide modal!');
-        $this->alert('success', 'PRODUCTO EDITADO CON EXITO',[
-        'position' => 'center'
-        ]);         
+        $this->emit('item-editar', 'hide modal!');
+        $this->alert('success', 'PRODUCTO EDITADO CON EXITO', [
+            'position' => 'center',
+        ]);
 
     }
 
     public function Destroy(Inventario $inventario)
-    {   
+    {
         $inventario->delete();
         $this->resetUI();
-        $this->alert('success', 'PRODUCTO ELIMINADO CON EXITO',[
-        'position' => 'center'
+        $this->alert('success', 'PRODUCTO ELIMINADO CON EXITO', [
+            'position' => 'center',
         ]);
         $this->emit('refresh');
         $this->resetUI();
-    }   
+    }
 
     protected $listeners = [
         'deleteRow' => 'Destroy',
-        'refresh'
+        'refresh',
     ];
 
     public function Traslado(Inventario $inventario)
     {
-       $this->almacenOrigen = $inventario->almacen_id;
-       $this->producto_id = $inventario->producto_id;
-       $this->stock = $inventario->stock;     
-       $this->emit('modal-show-traslado','show modal!');
+        $this->almacenOrigen = $inventario->almacen_id;
+        $this->producto_id = $inventario->producto_id;
+        $this->stock = $inventario->stock;
+        $this->emit('modal-show-traslado', 'show modal!');
     }
-    
+
     public function trasladarStock()
-    {   
+    {
         $rules =
     [
         'almacenOrigen' => 'required',
@@ -204,52 +234,52 @@ class Inventarios extends Component
         'producto_id' => 'required',
         'stock' => 'required',
         'stockIn' => 'required',
-        'stockIn' => 'numeric'
+        'stockIn' => 'numeric',
     ];
 
         $messages = [
 
-        'almacenDestino.required' => 'El Almacen de destino es requerido',
-        'almacenOrigen.required' => 'El Almacen de origen es requerido',        
-        'producto_id.required' => 'El producto es requerido',
-        'stock.required' => 'El stock es requerido.',
-        'stockIn.required' => 'La cantidad a trasladar es requerida',
-        'stockIn.numeric' => 'El stock es requerido, debe ingresar solo numeros'         
-    ];
+            'almacenDestino.required' => 'El Almacen de destino es requerido',
+            'almacenOrigen.required' => 'El Almacen de origen es requerido',
+            'producto_id.required' => 'El producto es requerido',
+            'stock.required' => 'El stock es requerido.',
+            'stockIn.required' => 'La cantidad a trasladar es requerida',
+            'stockIn.numeric' => 'El stock es requerido, debe ingresar solo numeros',
+        ];
 
-        $this->validate($rules,$messages);
+        $this->validate($rules, $messages);
 
         $producto = Producto::findOrFail($this->producto_id);
 
         $inventarioOrigen = Inventario::where('producto_id', $this->producto_id)
-                                  ->where('almacen_id', $this->almacenOrigen)
-                                  ->first();
+            ->where('almacen_id', $this->almacenOrigen)
+            ->first();
 
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
-                                            ->where('almacen_id', $this->almacenDestino)
-                                            ->first();
-        if ($inventarioDestino) { 
-                   
+            ->where('almacen_id', $this->almacenDestino)
+            ->first();
+        if ($inventarioDestino) {
+
             // Validar que la sucursal de origen no sea la misma que la de destino
             $almacenOrigen = Almacen::findOrFail($this->almacenOrigen);
             $almacenDestino = Almacen::findOrFail($this->almacenDestino);
 
             if ($almacenOrigen->id == $almacenDestino->id) {
-                $this->resetUI();      
+                $this->resetUI();
                 $this->emit('item-traslado', 'Producto Trasladado');
-                $this->alert('error', 'EL ALMACEN DE ORIGEN NO PUEDE SER EL MISMO QUE EL DE DESTINO',[
-                'position' => 'center'
-                ]);             
-            }        
+                $this->alert('error', 'EL ALMACEN DE ORIGEN NO PUEDE SER EL MISMO QUE EL DE DESTINO', [
+                    'position' => 'center',
+                ]);
+            }
 
             // Validar que el stock no sea mayor
             elseif ($inventarioOrigen->stock < $this->stockIn) {
-            $this->resetUI();
-            $this->emit('item-traslado', 'Producto Trasladado');            
-            $this->alert('error', 'NO HAY STOCK SUFICIENTE PARA TRASLADAR',[
-                'position' => 'center'
-                ]);                 
-            }else{
+                $this->resetUI();
+                $this->emit('item-traslado', 'Producto Trasladado');
+                $this->alert('error', 'NO HAY STOCK SUFICIENTE PARA TRASLADAR', [
+                    'position' => 'center',
+                ]);
+            } else {
 
                 // Restar stock del almacen de origen
                 $inventarioOrigen->stock -= $this->stockIn;
@@ -260,143 +290,139 @@ class Inventarios extends Component
                 $inventarioDestino->save();
 
                 // Redireccionar a la página de inventario
-                $this->resetUI();       
+                $this->resetUI();
                 $this->emit('item-traslado', 'Producto Trasladado');
-                $this->alert('success', 'PRODUCTO TRASLADADO CON EXITO',[
-                'position' => 'center'
-                ]);  
-            }                               
+                $this->alert('success', 'PRODUCTO TRASLADADO CON EXITO', [
+                    'position' => 'center',
+                ]);
+            }
 
-        }else{
-            $this->resetUI();           
+        } else {
+            $this->resetUI();
             $this->emit('item-traslado', 'Producto Trasladado');
-            $this->alert('error', 'EL PRODUCTO NO EXISTE EN EL ALMACEN DE DESTINO',[
-            'position' => 'center'
-            ]);   
-        }        
-        
-    }    
+            $this->alert('error', 'EL PRODUCTO NO EXISTE EN EL ALMACEN DE DESTINO', [
+                'position' => 'center',
+            ]);
+        }
 
-    public function Sumar(Inventario $inventario){
-       $this->almacenOrigen = $inventario->almacen_id;
-       $this->producto_id = $inventario->producto_id;
-       $this->stock = $inventario->stock;   
-       $this->emit('modal-show-sumar','show modal!');
     }
 
+    public function Sumar(Inventario $inventario)
+    {
+        $this->almacenOrigen = $inventario->almacen_id;
+        $this->producto_id = $inventario->producto_id;
+        $this->stock = $inventario->stock;
+        $this->emit('modal-show-sumar', 'show modal!');
+    }
 
     public function sumarStock()
     {
         $rules =
-    [        
+    [
         'stockIn' => 'required',
-        'stockIn' => 'numeric'
+        'stockIn' => 'numeric',
     ];
 
         $messages = [
-        
-        'stockIn.required' => 'El stock es requerido.',
-        'stockIn.numeric' => 'El stock es requerido, debe ingresar solo numeros'        
-    ];
 
-        $this->validate($rules,$messages);
+            'stockIn.required' => 'El stock es requerido.',
+            'stockIn.numeric' => 'El stock es requerido, debe ingresar solo numeros',
+        ];
+
+        $this->validate($rules, $messages);
 
         // Validar que el producto exista en el almacen de origen
         $producto = Producto::findOrFail($this->producto_id);
         $almacenOrigen = Almacen::findOrFail($this->almacenOrigen);
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
-                                            ->where('almacen_id', $this->almacenOrigen)
-                                            ->first();
+            ->where('almacen_id', $this->almacenOrigen)
+            ->first();
 
         // Agregar stock al almacen de destino
         $inventarioDestino->stock += $this->stockIn;
         $inventarioDestino->save();
 
-        // Redireccionar a la página de inventario        
+        // Redireccionar a la página de inventario
         $this->resetUI();
         $this->emit('item-sumar', 'Producto Trasladado');
-        $this->alert('success', 'STOCK AUMENTADO CON EXITO',[
-            'position' => 'center'
-            ]);
-        
-        
+        $this->alert('success', 'STOCK AUMENTADO CON EXITO', [
+            'position' => 'center',
+        ]);
+
     }
 
-    public function Restar(Inventario $inventario){
-       $this->almacenOrigen = $inventario->almacen_id;
-       $this->producto_id = $inventario->producto_id;
-       $this->stock = $inventario->stock;  
-       $this->emit('modal-show-restar','show modal!');
+    public function Restar(Inventario $inventario)
+    {
+        $this->almacenOrigen = $inventario->almacen_id;
+        $this->producto_id = $inventario->producto_id;
+        $this->stock = $inventario->stock;
+        $this->emit('modal-show-restar', 'show modal!');
     }
-
 
     public function restarStock()
     {
         $rules =
-    [        
+    [
         'stockIn' => 'required',
-        'stockIn' => 'numeric'
+        'stockIn' => 'numeric',
     ];
 
         $messages = [
-        
-        'stockIn.required' => 'El stock es requerido.',
-        'stockIn.numeric' => 'El stock es requerido, debe ingresar solo numeros'        
-    ];
 
-        $this->validate($rules,$messages);
+            'stockIn.required' => 'El stock es requerido.',
+            'stockIn.numeric' => 'El stock es requerido, debe ingresar solo numeros',
+        ];
+
+        $this->validate($rules, $messages);
 
         // Validar que el producto exista en el almacen de origen
         $producto = Producto::findOrFail($this->producto_id);
         $almacenOrigen = Almacen::findOrFail($this->almacenOrigen);
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
-                                            ->where('almacen_id', $this->almacenOrigen)
-                                            ->first();
+            ->where('almacen_id', $this->almacenOrigen)
+            ->first();
 
         if ($inventarioDestino->stock < $this->stockIn) {
 
             $this->emit('item-restar', 'Producto Trasladado');
             $this->resetUI();
             $this->addError('sinStock', 'No hay suficiente stock.');
-            $this->alert('error', 'EL STOCK A DISMIUR SUPERA EL STOCK ACTUAL',[
-                'position' => 'center'
-                ]); 
+            $this->alert('error', 'EL STOCK A DISMIUR SUPERA EL STOCK ACTUAL', [
+                'position' => 'center',
+            ]);
 
-        }else{            
+        } else {
 
             $inventarioDestino->stock -= $this->stockIn;
             $inventarioDestino->save();
-            // Redireccionar a la página de inventario        
+            // Redireccionar a la página de inventario
             $this->resetUI();
             $this->emit('item-restar', 'Producto Trasladado');
-            $this->alert('success', 'STOCK DISMINUIDO CON EXITO',[
-                'position' => 'center'
-                ]); 
-        
-        }               
-        
+            $this->alert('success', 'STOCK DISMINUIDO CON EXITO', [
+                'position' => 'center',
+            ]);
+
+        }
+
     }
 
     public function closeModal()
     {
         $this->showModal = false;
         $this->resetUI();
-        
+
     }
 
     public function resetUI()
     {
-       $this->producto_id = "";
-       $this->almacenOrigen = "";
-       $this->almacenDestino = "";
-       $this->stock = 0;
-       $this->stockIn = 0;
-       $this->stock_minimo = 0;                   
-       $this->seleccionar_id = 0;       
-       $this->resetValidation();       
-        
+        $this->producto_id = '';
+        $this->almacenOrigen = '';
+        $this->almacenDestino = '';
+        $this->stock = 0;
+        $this->stockIn = 0;
+        $this->stock_minimo = 0;
+        $this->seleccionar_id = 0;
+        $this->resetValidation();
+
     }
-
-
-
 }

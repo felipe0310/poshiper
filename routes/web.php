@@ -1,19 +1,17 @@
 <?php
 
-
-use App\Http\Livewire\Clientes;
-use App\Http\Livewire\Empresas;
 use App\Http\Livewire\Almacenes;
-use App\Http\Livewire\Depositos;
-use App\Http\Livewire\Empleados;
-use App\Http\Livewire\Productos;
 use App\Http\livewire\Categorias;
-use App\Http\Livewire\Inventarios;
-use App\Http\Livewire\Proveedores;
+use App\Http\Livewire\Clientes;
+use App\Http\Livewire\Depositos;
 use App\Http\Livewire\DocAlmacenes;
+use App\Http\Livewire\Empleados;
+use App\Http\Livewire\Empresas;
+use App\Http\Livewire\Inventarios;
 use App\Http\Livewire\InventarioSucursal;
+use App\Http\Livewire\Productos;
+use App\Http\Livewire\Proveedores;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +43,3 @@ Route::get('docAlmacenes', DocAlmacenes::class);
 Route::get('empleados', Empleados::class);
 Route::get('inventarios', InventarioSucursal::class);
 Route::get('inventario/{id}', Inventarios::class);
-

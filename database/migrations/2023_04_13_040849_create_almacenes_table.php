@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('descripcion');
             $table->string('ubicacion');
             $table->time('entrada');
-            $table->time('salida');            
+            $table->time('salida');
             $table->timestamps();
         });
     }

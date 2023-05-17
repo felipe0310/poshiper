@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
-use App\Models\Producto;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Deposito extends Model
 {
     use HasFactory;
+
     protected $table = 'depositos';
+
     protected $primaryKey = 'id';
-   
+
     protected $fillable =
     [
         'producto_id',
-        'stock'
+        'stock',
     ];
 
     public function productos()
@@ -24,5 +25,4 @@ class Deposito extends Model
     }
 
     protected $guarded = [];
-
 }

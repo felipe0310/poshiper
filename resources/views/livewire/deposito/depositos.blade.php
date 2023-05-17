@@ -25,7 +25,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($depositos as $deposito)
+                                @forelse ($depositos as $deposito)
                                     <tr>
                                         <td>{{ $deposito->productos_codigo }}</td>
                                         <td>{{ $deposito->productos_descripcion }}</td>
@@ -55,7 +55,11 @@
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="6">No se encontraron productos</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                         {{ $depositos->links() }}
@@ -71,15 +75,16 @@
     </div>
 </div>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
-            $('#theModal').modal('hide');            
+            $('#theModal').modal('hide');
         })
 
         window.livewire.on('item-updated', msg => {
-            $('#theModal').modal('hide');            
+            $('#theModal').modal('hide');
         })
 
         window.livewire.on('item-delete', msg => {})
@@ -138,7 +143,7 @@
         })
 
         window.livewire.on('item-editar', msg => {
-            $('#editarModal').modal('hide');            
+            $('#editarModal').modal('hide');
         })
 
         $('#editarModal').on('hidden.modal', function(e) {
@@ -147,21 +152,24 @@
 
     });
 
-    document.addEventListener('livewire:load', function () {
-            Livewire.on('refreshComponent', function () {
-                Livewire.refresh();
-            });
+    document.addEventListener('livewire:load', function() {
+        Livewire.on('refreshComponent', function() {
+            Livewire.refresh();
         });
+    });
 
     function Confirm(id, stock) {
         if (stock > 0) {
-            swal.fire('NO SE PUEDE ELIMINAR EL PRODUCTO PORQUE TIENE STOCK DISPONIBLE')
+            swal.fire({
+                title: 'NO SE PUEDE ELIMINAR EL PRODUCTO PORQUE TIENE STOCK DISPONIBLE',
+                icon: 'error'
+            })
             return;
         }
         swal.fire({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             confirmButtonText: 'Aceptar'

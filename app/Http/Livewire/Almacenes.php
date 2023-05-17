@@ -4,89 +4,105 @@ namespace App\Http\Livewire;
 
 use App\Models\Almacen;
 use App\Models\Empresa;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Almacenes extends Component
 {
     use WithPagination;
-    use LivewireAlert; 
+    use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
+
     private $paginacion = 7;
-    public $buscar, $seleccionar_id, $paginaTitulo, $nombreComponente;
 
-    public $empresa_id, $descripcion, $ubicacion, $entrada, $salida;   
+    public $buscar;
 
-     protected $rules =
+    public $seleccionar_id;
+
+    public $paginaTitulo;
+
+    public $nombreComponente;
+
+    public $empresa_id;
+
+    public $descripcion;
+
+    public $ubicacion;
+
+    public $entrada;
+
+    public $salida;
+
+    protected $rules =
     [
-        'empresa_id' => 'required',
-        'descripcion' => 'required|unique:almacenes,descripcion',
-        'ubicacion' => 'required',
-        'entrada' => 'required',
-        'salida' => 'required'
+       'empresa_id' => 'required',
+       'descripcion' => 'required|unique:almacenes,descripcion',
+       'ubicacion' => 'required',
+       'entrada' => 'required',
+       'salida' => 'required',
     ];
 
     protected $messages = [
         'empresa_id.required' => 'La empresa es requerida.',
         'descripcion.required' => 'La descripcion es requerida.',
-        'descripcion.unique' => 'La descripcion ya existe.',         
+        'descripcion.unique' => 'La descripcion ya existe.',
         'ubicacion.required' => 'La ubicación es requerida.',
         'entrada.required' => 'La hora de entrada en requerida',
-        'salida.required' => 'La hora de salida en requerida',        
+        'salida.required' => 'La hora de salida en requerida',
     ];
 
     public function mount()
     {
         $this->empresa_id = 'Elegir';
         $this->paginaTitulo = 'Listado';
-        $this->nombreComponente = 'Almacenes';        
-    } 
-
+        $this->nombreComponente = 'Almacenes';
+    }
 
     public function render()
     {
-        if(strlen($this->buscar) > 0)
-            $almacenes = Almacen::join('empresas as e','e.id','almacenes.empresa_id')
-            ->select('almacenes.*',('e.rut as empresas'))
-            ->where('almacenes.descripcion','like','%' . $this->buscar . '%')
-            ->orWhere('almacenes.ubicacion','like','%' . $this->buscar . '%')            
-            ->orWhere('e.rut','like','%' . $this->buscar . '%')
-            ->orderBy('almacenes.descripcion', 'asc')
-            ->paginate($this->paginacion);
-        else
-            $almacenes = Almacen::join('empresas as e','e.id','almacenes.empresa_id')
-                ->select('almacenes.*',('e.rut as empresas'))                
+        if (strlen($this->buscar) > 0) {
+            $almacenes = Almacen::join('empresas as e', 'e.id', 'almacenes.empresa_id')
+                ->select('almacenes.*', ('e.rut as empresas'))
+                ->where('almacenes.descripcion', 'like', '%'.$this->buscar.'%')
+                ->orWhere('almacenes.ubicacion', 'like', '%'.$this->buscar.'%')
+                ->orWhere('e.rut', 'like', '%'.$this->buscar.'%')
                 ->orderBy('almacenes.descripcion', 'asc')
                 ->paginate($this->paginacion);
-            
-        return view('livewire.almacen.almacenes',[
-            'almacenes'=>$almacenes,
-            'empresas' => Empresa::orderBy('rut','asc')->get()
-            ])
-        ->extends('layouts.theme.app')
-        ->section('content');
+        } else {
+            $almacenes = Almacen::join('empresas as e', 'e.id', 'almacenes.empresa_id')
+                ->select('almacenes.*', ('e.rut as empresas'))
+                ->orderBy('almacenes.descripcion', 'asc')
+                ->paginate($this->paginacion);
+        }
+
+        return view('livewire.almacen.almacenes', [
+            'almacenes' => $almacenes,
+            'empresas' => Empresa::orderBy('rut', 'asc')->get(),
+        ])
+            ->extends('layouts.theme.app')
+            ->section('content');
         $data = Almacen::where('descripcion', 'like', '%'.$this->buscar.'%')->paginate($this->paginacion);
-        $data = Almacen::orderBy('descripcion','asc')->paginate($this->paginacion);
+        $data = Almacen::orderBy('descripcion', 'asc')->paginate($this->paginacion);
     }
 
-    public function Edit($id)           
+    public function Edit($id)
     {
-       $almacen = Almacen::find($id, ['id','empresa_id','descripcion','ubicacion','entrada','salida']);
-       $this->seleccionar_id = $almacen->id;
-       $this->empresa_id = $almacen->empresa_id;
-       $this->descripcion = $almacen->descripcion;
-       $this->ubicacion = $almacen->ubicacion;
-       $this->entrada = $almacen->entrada;
-       $this->salida = $almacen->salida;   
+        $almacen = Almacen::find($id, ['id', 'empresa_id', 'descripcion', 'ubicacion', 'entrada', 'salida']);
+        $this->seleccionar_id = $almacen->id;
+        $this->empresa_id = $almacen->empresa_id;
+        $this->descripcion = $almacen->descripcion;
+        $this->ubicacion = $almacen->ubicacion;
+        $this->entrada = $almacen->entrada;
+        $this->salida = $almacen->salida;
 
-       $this->emit('show-modal','show modal!');      
-        
+        $this->emit('show-modal', 'show modal!');
+
     }
 
     public function Store()
-    {       
+    {
         $this->validate();
 
         $almacen = Almacen::create([
@@ -94,87 +110,82 @@ class Almacenes extends Component
             'descripcion' => $this->descripcion,
             'ubicacion' => $this->ubicacion,
             'entrada' => $this->entrada,
-            'salida' => $this->salida        
+            'salida' => $this->salida,
         ]);
-        
+
         $this->resetUI();
         $this->emit('item-added', 'Almacen Registrado');
-        $this->alert('success', 'ALMACEN CREADO CON EXITO',[
-        'position' => 'center'
+        $this->alert('success', 'ALMACEN CREADO CON EXITO', [
+            'position' => 'center',
         ]);
-         
+
     }
 
     public function Update()
-    {           
+    {
         $rules =
     [
         'empresa_id' => 'required',
         'descripcion' => "required|unique:almacenes,descripcion,{$this->seleccionar_id}",
         'ubicacion' => 'required',
         'entrada' => 'required',
-        'salida' => 'required'
+        'salida' => 'required',
     ];
 
         $messages = [
-        'empresa_id.required' => 'La empresa es requerida.',
-        'descripcion.required' => 'La descripcion es requerida.',
-        'descripcion.unique' => 'La descripcion ya existe.',          
-        'ubicacion.required' => 'La ubicación es requerida.',
-        'entrada.required' => 'La hora de entrada en requerida',
-        'salida.required' => 'La hora de salida en requerida',        
-    ];
+            'empresa_id.required' => 'La empresa es requerida.',
+            'descripcion.required' => 'La descripcion es requerida.',
+            'descripcion.unique' => 'La descripcion ya existe.',
+            'ubicacion.required' => 'La ubicación es requerida.',
+            'entrada.required' => 'La hora de entrada en requerida',
+            'salida.required' => 'La hora de salida en requerida',
+        ];
 
-        $this->validate($rules,$messages);
+        $this->validate($rules, $messages);
         $almacen = Almacen::find($this->seleccionar_id);
         $almacen->update([
             'empresa_id' => $this->empresa_id,
             'descripcion' => $this->descripcion,
             'ubicacion' => $this->ubicacion,
             'entrada' => $this->entrada,
-            'salida' => $this->salida  
+            'salida' => $this->salida,
         ]);
 
         $this->resetUI();
         $this->emit('item-updated', 'Almacen Actualizado');
-        $this->alert('success', 'ALMACEN ACTUALIZADO CON EXITO',[
-        'position' => 'center'
-        ]); 
+        $this->alert('success', 'ALMACEN ACTUALIZADO CON EXITO', [
+            'position' => 'center',
+        ]);
 
     }
 
     public function Destroy(Almacen $almacen)
     {
-        
-        $almacen->delete();        
+
+        $almacen->delete();
         $this->resetUI();
         $this->emit('item-delete', 'Almacen Eliminado');
-        $this->alert('success', 'ALMACEN ELIMINADO CON EXITO',[
-        'position' => 'center'
-        ]); 
-        
+        $this->alert('success', 'ALMACEN ELIMINADO CON EXITO', [
+            'position' => 'center',
+        ]);
 
     }
 
     protected $listeners = [
-        'deleteRow' => 'Destroy'
+        'deleteRow' => 'Destroy',
     ];
 
     public function resetUI()
     {
-       
-       $this->empresa_id = " ";       
-       $this->descripcion = " ";
-       $this->ubicacion = " ";
-       $this->entrada = " ";
-       $this->salida = " ";
-       $this->buscar = " ";
-       $this->seleccionar_id = 0;
-       $this->resetValidation();       
-        
+
+        $this->empresa_id = ' ';
+        $this->descripcion = ' ';
+        $this->ubicacion = ' ';
+        $this->entrada = ' ';
+        $this->salida = ' ';
+        $this->buscar = ' ';
+        $this->seleccionar_id = 0;
+        $this->resetValidation();
+
     }
-
-
-
 }
-

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     use HasFactory;
+
     protected $table = 'clientes';
+
     protected $primaryKey = 'id';
-   
+
     protected $fillable =
     [
         'rut',
@@ -20,8 +22,8 @@ class Cliente extends Model
         'telefono',
         'limite_credito',
         'credito_usado',
-        'descuento'
-    ];    
+        'descuento',
+    ];
 
     protected $guarded = [];
 }
