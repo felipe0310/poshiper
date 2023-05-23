@@ -44,10 +44,10 @@
                                         <td>{{ $producto->descripcion }}</td>
                                         <td>{{ $producto->proveedores }}</td>
                                         <td>{{ $producto->cantidad_caja }}</td>
-                                        <td>${{ number_format($producto->precio_compra, 0, ',', '.') }}</td>
-                                        <td>${{ number_format($producto->precio_venta, 0, ',', '.') }}</td>
-                                        <td>${{ number_format($producto->precio_mayoreo, 0, ',', '.') }}</td>
-                                        <td>${{ number_format($producto->precio_oferta, 0, ',', '.') }}</td>
+                                        <td>$ {{ number_format($producto->precio_compra, 0, ',', '.') }}</td>
+                                        <td>$ {{ number_format($producto->precio_venta, 0, ',', '.') }}</td>
+                                        <td>$ {{ number_format($producto->precio_mayoreo, 0, ',', '.') }}</td>
+                                        <td>$ {{ number_format($producto->precio_oferta, 0, ',', '.') }}</td>
                                         <td>{{ $producto->categorias }}</td>
 
                                         <td class="text-center">

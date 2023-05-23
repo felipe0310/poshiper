@@ -18,5 +18,10 @@ class Proveedor extends Model
         'nombre',
     ];
 
+    public function compra()
+    {
+        return $this->belongsTo(Compra::class);
+    }
+
     protected $guarded = [];
 }

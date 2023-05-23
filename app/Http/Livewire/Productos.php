@@ -98,7 +98,7 @@ class Productos extends Component
 
     public function render()
     {
-        if (strlen($this->buscar) > 0) {
+        if (strlen($this->buscar) > 2) {
             $productos = Producto::join('categorias as c', 'c.id', 'productos.categoria_id')
                 ->join('proveedores as pr', 'pr.id', 'productos.proveedor_id')
                 ->select('productos.*', 'c.nombre as categorias', 'pr.nombre as proveedores')

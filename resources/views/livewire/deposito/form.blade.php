@@ -34,10 +34,8 @@
                 </table>
             </div>
             <div class="modal-footer">
-
                 <button type="button" wire:click.prevent="closeModal()" class="btn btn-button btn-danger"
                     data-bs-dismiss="modal">CERRAR</button>
-
             </div>
         </div>
     </div>

@@ -8,4 +8,31 @@ use Illuminate\Database\Eloquent\Model;
 class Compra extends Model
 {
     use HasFactory;
+
+    protected $table = 'compras';
+
+    protected $primaryKey = 'id';
+
+    protected $fillable =
+    [
+        'proveedor_id',
+        'documento',
+        'num_documento',
+        'subtotal',
+        'iva',
+        'total_compra',
+        'tipo_pago'
+    ];    
+    
+    public function detalles()
+    {
+        return $this->hasMany(DetalleCompra::class);
+    }
+
+    public function proovedor()
+    {
+        return $this->hasMany(Prooveedor::class);
+    }
+
+    protected $guarded = [];
 }

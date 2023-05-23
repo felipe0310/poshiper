@@ -49,7 +49,7 @@ class Categorias extends Component
 
     public function render()
     {
-        if (strlen($this->buscar) > 0) {
+        if (strlen($this->buscar) > 3) {
             $data = Categoria::where('nombre', 'like', '%'.$this->buscar.'%')->paginate($this->paginacion);
         } else {
             $data = Categoria::orderBy('nombre', 'asc')->paginate($this->paginacion);
