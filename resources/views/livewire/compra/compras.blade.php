@@ -12,17 +12,18 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                                    <input type="text" wire:model="busqueda" wire:keydown.enter="buscarProducto"
+                                        placeholder="Buscar" class="form-control">
                                     <div class="search-table">
-                                        @if (!empty($search))
+                                        @if (!empty($busqueda))
                                             <table class="table table-bordered mb-4">
                                                 <tbody>
                                                     @foreach ($productos as $producto)
                                                         <tr>
                                                             <td>
                                                                 <span class="form-control"
-                                                                    wire:click="agregarProducto({{ $producto->id }})">
-                                                                    {{ $producto->descripcion }}
+                                                                    wire:click="agregarAlCarrito({{ $producto['id'] }})">
+                                                                    {{ $producto['descripcion'] }}
                                                                 </span>
                                                             </td>
                                                         </tr>
@@ -37,36 +38,28 @@
                                                 <tr>
                                                     <th>Producto</th>
                                                     <th class="text-center">Cantidad</th>
-                                                    <th class="text-center">Precio</th>
+                                                    <th class="text-center">Precio Compra</th>
                                                     <th class="text-center">Opciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($productosAComprar as $index => $producto)
+                                                @forelse ($carrito  as $indice => $item)
                                                     <tr>
-                                                        <td>
-                                                            <select class="form-control" aria-label="Disabled" disabled
-                                                                wire:model="productosAComprar.{{ $index }}.producto_id">
-                                                                @foreach ($productos as $producto)
-                                                                    <option value="{{ $producto->id }}">
-                                                                        {{ $producto->descripcion }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
+                                                        <td style="width: 50%">
+                                                            <label>{{ $item['nombre'] }}</label>
                                                         </td>
                                                         <td>
-                                                            <input class="form-control" type="number"
-                                                                wire:model="productosAComprar.{{ $index }}.cantidad"
-                                                                placeholder="Cantidad a comprar">
+                                                            <input class="form-control text-center" type="number"
+                                                                wire:model="cantidades.{{ $indice }}">
                                                         </td>
                                                         <td>
-                                                            <input class="form-control" type="number"
-                                                                wire:model="productosAComprar.{{ $index }}.precio"
-                                                                placeholder="{{ $productoPrecio }}">
+                                                            <input class="form-control text-center" type="number"
+                                                                wire:model="precios.{{ $indice }}"
+                                                                value="{{ $precios[$indice] }}">
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-danger" type="button"
-                                                                wire:click="eliminarProducto({{ $index }})">Eliminar</button>
+                                                                wire:click="eliminarDelCarrito({{ $indice }})">Eliminar</button>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -84,7 +77,7 @@
                                         <div class="card-header" style="background: #4361ee">
                                             <div class="card-title text-center">
                                                 <h3 style="color: #ebe3e3;">Total Compra : $
-                                                    {{ $totalCompra }}
+
                                                 </h3>
                                             </div>
                                         </div>
@@ -92,7 +85,7 @@
                                             <div class="row mb-2">
                                                 <div class="mb-2">
                                                     <label>Proveedor</label>
-                                                    <select class="form-select" wire:model="proveedorId">
+                                                    <select class="form-select" wire:model="proveedor_id">
                                                         <option value="">Selecciona un proveedor</option>
                                                         @foreach ($proveedores as $proveedor)
                                                             <option value="{{ $proveedor->id }}">
@@ -111,7 +104,7 @@
                                                 </div>
                                                 <div class="mb-2">
                                                     <label>Nro. Documento</label>
-                                                    <input wire:model="numDocumento" type="text"
+                                                    <input wire:model="num_documento" type="text"
                                                         class="form-control">
                                                 </div>
                                                 <div class="mb-2">
@@ -123,7 +116,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-info" wire:click.prevent="store">Realizar la
+                                            <button class="btn btn-info" wire:click.prevent="realizarCompra">Realizar la
                                                 Compra</button>
                                             <button class="btn btn-danger float-end" wire:click.prevent="resetUI">Vaciar
                                                 Listado</button>
