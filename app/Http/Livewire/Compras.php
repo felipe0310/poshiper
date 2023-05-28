@@ -20,8 +20,7 @@ class Compras extends Component
     protected $paginationTheme = 'bootstrap';
     private $paginacion = 7;
 
-    public $productos = [];
-    public $nombreProducto;
+    public $productos = [];   
     public $cantidades = [];
     public $precios = [];
     public $busqueda;
@@ -35,14 +34,15 @@ class Compras extends Component
     
     public function mount() 
     {
-        $this->productos = Producto::all()->toArray();
+        $this->productos = Producto::all()->toArray();              
     }
     
     public function render()
-    {   
-        
+    {         
         return view('livewire.compra.compras',[            
             'proveedores' => Proveedor::all(),
+            'precios' => $this->precios,
+            'total' => $this->calcularTotal(),
 
         ])
         ->extends('layouts.theme.app')
@@ -58,7 +58,10 @@ class Compras extends Component
     public function buscarProducto()
     {
         if (!empty($this->busqueda)) {
-            $this->productos = Producto::where('descripcion', 'like', '%' . $this->busqueda . '%')->get()->toArray();
+            $this->productos = Producto::where('descripcion', 'like', '%' . $this->busqueda . '%')
+                                       ->orWhere('codigo_barras', 'like', '%' . $this->busqueda . '%')
+                                       ->get()
+                                       ->toArray();
         } else {
             $this->productos = Producto::all()->toArray();
         }
@@ -69,24 +72,54 @@ class Compras extends Component
     {
         $producto = Producto::find($idProducto);
 
-        if ($producto) {
-            $this->carrito[] = [
-                'producto_id' => $producto->id,
-                'nombre' => $producto->descripcion,
-                $this->cantidades[] = 0,
-                $this->precios[] = $producto->precio_compra
-            ];
-        }
-
+        foreach ($this->carrito as $productoSeleccionado) {
+            if ($productoSeleccionado['producto_id'] == $idProducto) {
+                $this->busqueda = "";            
+                $this->alert('error', 'EL PRODUCTO YA EXISTE EN EL CARRITO', ['position' => 'top']);
+                return;
+            } 
+        }        
+            
+            if ($producto) {
+                $this->carrito[] = [
+                    'producto_id' => $producto->id,
+                    'nombre' => $producto->descripcion,
+                    $this->cantidades[] = 0,
+                    $this->precios[] = $producto->precio_compra
+                ];                       
+            }   
+            
+        $this->alert('success', 'PRODUCTO AGREGADO', ['position' => 'top']);                       
+           
         $this->busqueda = "";
+        
     }
 
     public function eliminarDelCarrito($indice)
-    {
+    {       
+
         if (isset($this->carrito[$indice])) {
             unset($this->carrito[$indice]);
             $this->carrito = array_values($this->carrito);
         }
+        $this->alert('success', 'PRODUCTO ELIMINADO', ['position' => 'top']);                 
+        
+    }
+
+    public $listeners = [
+        'removeItem' => 'eliminarDelCarrito'
+    ];
+    
+    public function calcularTotal()
+    {
+        $total = 0;
+
+        foreach ($this->carrito as $indice => $item) {
+            $subtotal = $this->precios[$indice] * $this->cantidades[$indice];
+            $total += $subtotal;
+        }
+
+        return $total;
     }
 
     public function realizarCompra()
@@ -122,7 +155,9 @@ class Compras extends Component
 
                 // Actualizar el stock en el depósito
                 $deposito = Deposito::where('producto_id', $producto->id)->first();
-                if ($deposito) {
+                if (!$deposito) {
+                    return;
+                }else{
                     $deposito->stock += $this->cantidades[$indice];
                     $deposito->save();
                 }
@@ -135,9 +170,8 @@ class Compras extends Component
             }
         });
 
-        // Limpia el carrito después de la compra.
+        // Limpia el carrito después de la compra.         
         $this->carrito = [];
-    }
-
+    }  
 
 }

@@ -59,7 +59,7 @@
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-danger" type="button"
-                                                                wire:click="eliminarDelCarrito({{ $indice }})">Eliminar</button>
+                                                                onClick="Confirm({{ $indice }})">Eliminar</button>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -77,7 +77,7 @@
                                         <div class="card-header" style="background: #4361ee">
                                             <div class="card-title text-center">
                                                 <h3 style="color: #ebe3e3;">Total Compra : $
-
+                                                    {{ number_format($total, 0, ',', '.') }}
                                                 </h3>
                                             </div>
                                         </div>
@@ -95,7 +95,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="mb-2">
-                                                    <label>Documento</label>
+                                                    <label>Tipo Documento</label>
                                                     <select class="form-select" wire:model="documento">
                                                         <option>Selecciona un Documento</option>
                                                         <option>Factura</option>
@@ -123,57 +123,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                {{-- <div class="col-8">
-                                    <form wire:submit.prevent="store">
-                                        @foreach ($productosAComprar as $index => $producto)
-                                            <select wire:model="productosAComprar.{{ $index }}.producto_id">
-                                                <option value="">Selecciona un producto</option>
-                                                @foreach ($productos as $producto)
-                                                    <option value="{{ $producto->id }}">{{ $producto->descripcion }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <input type="number"
-                                                wire:model="productosAComprar.{{ $index }}.cantidad"
-                                                placeholder="Cantidad a comprar">
-                                            <input type="number"
-                                                wire:model="productosAComprar.{{ $index }}.precio"
-                                                placeholder="Precio de compra">
-                                            <button type="button"
-                                                wire:click="eliminarProducto({{ $index }})">Eliminar</button>
-                                        @endforeach
-                                        <button type="button" wire:click="agregarProducto">Agregar
-                                            producto</button>
-                                        <button type="submit">Realizar compra</button>
-                                    </form>
-                                </div>
-
-                                <div class="col-4">
-                                    <form wire:submit.prevent="store">
-                                        <div class="form-group">
-                                            @foreach ($productosAComprar as $index => $producto)
-                                                <select wire:model="proveedorId">
-                                                    <option value="">Selecciona un proveedor</option>
-                                                    @foreach ($proveedores as $proveedor)
-                                                        <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" wire:model="documento" placeholder="Documento">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="number" wire:model="numDocumento"
-                                                placeholder="Numero Documento">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" wire:model="tipoPago" placeholder="Tipo de Pago">
-                                        </div>
-                                        @endforeach
-                                </div>
-                                </form>                                 --}}
                             </div>
                         </div>
                     </div>
@@ -184,12 +133,6 @@
 </div>
 </div>
 
-
-{{-- <script>
-    ocument.addEventListener('DOMContentLoaded', function() {
-        window.open("print://" + saleId , '_blank')
-     })
-</script> --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         livewire.on('scan-code', action => {
