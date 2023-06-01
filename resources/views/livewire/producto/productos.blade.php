@@ -95,9 +95,8 @@
 
         })
 
-        window.livewire.on('masivaModal-modal', msg => {
+        window.livewire.on('masivaModal-hide', msg => {
             $('#masivaModal').modal('hide');
-
         })
 
         window.livewire.on('masivaModal-show', msg => {

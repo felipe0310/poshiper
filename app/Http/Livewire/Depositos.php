@@ -55,7 +55,7 @@ class Depositos extends Component
 
     public $productosAgregar;
 
-    private $paginacion = 7;
+    private $paginacion = 15;
 
     protected $rules =
     [
@@ -133,6 +133,41 @@ class Depositos extends Component
         $this->productosDisponibles = Producto::whereNotIn('id', $productosIngresados)->get();
 
     }
+
+    public function agregarTodosLosProductos()
+    {
+        $productos = Producto::all();
+
+        foreach ($productos as $producto) {
+            // Suponiendo que tienes una relación entre Productos e Inventario
+            $deposito = new Deposito();
+            $deposito->producto_id = $producto->id;
+            $deposito->stock = 0;
+            // otras columnas que puedas necesitar llenar
+            $deposito->save();
+        }
+
+        // actualizar la lista de productos
+        $productosIngresados = Deposito::pluck('producto_id')->toArray();
+        $this->productosDisponibles = Producto::whereNotIn('id', $productosIngresados)->get();
+
+        // mostrar un mensaje de éxito
+        $this->resetUI();
+        $this->alert('success', 'TODOS LOS PRODUCTOS FUERON AGREGADO CON EXITO', [
+            'position' => 'center',
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public function Update()
     {

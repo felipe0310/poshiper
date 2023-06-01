@@ -6,6 +6,7 @@
                 <h5 class="modal-title text-white">
                     <b>Agregar</b> | Productos
                 </h5>
+                <button class="btn btn-danger" wire:click="agregarTodosLosProductos">Agregar todos los productos</button>
                 <h6 class="text-center text-warning" wire:loading>Por Favor Espere</h6>
             </div>
             <div class="modal-body">
@@ -34,10 +35,8 @@
                 </table>
             </div>
             <div class="modal-footer">
-
                 <button type="button" wire:click.prevent="closeModal" class="btn btn-button btn-danger"
                     data-bs-dismiss="modal">CERRAR</button>
-
             </div>
         </div>
     </div>

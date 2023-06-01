@@ -159,6 +159,42 @@ class Inventarios extends Component
         ]);
     }
 
+    public function agregarTodosLosProductos()
+    {
+        $productos = Producto::all();
+
+        foreach ($productos as $producto) {
+            // Suponiendo que tienes una relación entre Productos e Inventario
+            $inventario = new Inventario();
+            $inventario->producto_id = $producto->id;
+            $inventario->almacen_id = $this->almacen_id;            
+            $inventario->usuario_id = 1;
+            $inventario->stock = 0;
+            $inventario->stock_minimo = 0;
+            // otras columnas que puedas necesitar llenar
+            $inventario->save();
+        }
+
+        // actualizar la lista de productos
+        $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
+            $join->on('productos.id', '=', 'inventarios.producto_id')
+                ->where('inventarios.almacen_id', '=', $this->almacen_id);
+        })
+            ->whereNull('inventarios.id')
+            ->select('productos.*')
+            ->get();
+
+        // mostrar un mensaje de éxito
+        $this->resetUI();
+        $this->alert('success', 'TODOS LOS PRODUCTOS FUERON AGREGADO CON EXITO', [
+            'position' => 'center',
+        ]);
+    }
+
+
+
+
+
     public function Edit(Inventario $inventario)
     {
         $this->seleccionar_id = $inventario->id;

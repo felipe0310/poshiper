@@ -85,6 +85,9 @@
                                             <div class="row mb-2">
                                                 <div class="mb-2">
                                                     <label>Proveedor</label>
+                                                    @error('proveedor_id')
+                                                        <span class="text-danger er">{{ $message }}</span>
+                                                    @enderror
                                                     <select class="form-select" wire:model="proveedor_id">
                                                         <option value="">Selecciona un proveedor</option>
                                                         @foreach ($proveedores as $proveedor)
@@ -96,25 +99,37 @@
                                                 </div>
                                                 <div class="mb-2">
                                                     <label>Tipo Documento</label>
+                                                    @error('documento')
+                                                        <span class="text-danger er">{{ $message }}</span>
+                                                    @enderror
                                                     <select class="form-select" wire:model="documento">
                                                         <option>Selecciona un Documento</option>
                                                         <option>Factura</option>
                                                         <option>Boleta</option>
                                                     </select>
                                                 </div>
+
                                                 <div class="mb-2">
                                                     <label>Nro. Documento</label>
+                                                    @error('num_documento')
+                                                        <span class="text-danger er">{{ $message }}</span>
+                                                    @enderror
                                                     <input wire:model="num_documento" type="text"
                                                         class="form-control">
                                                 </div>
+
                                                 <div class="mb-2">
                                                     <label>Forma de Pago</label>
+                                                    @error('tipoPago')
+                                                        <span class="text-danger er">{{ $message }}</span>
+                                                    @enderror
                                                     <select class="form-select" wire:model="tipoPago">
                                                         <option>Selecciona tipo de pago</option>
                                                         <option>Efectivo</option>
                                                         <option>Credito</option>
                                                     </select>
                                                 </div>
+
                                             </div>
                                             <button class="btn btn-info" wire:click.prevent="realizarCompra">Realizar la
                                                 Compra</button>

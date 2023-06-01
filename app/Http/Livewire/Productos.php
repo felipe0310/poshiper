@@ -267,17 +267,16 @@ class Productos extends Component
         try {
 
             Excel::import(new ProductosImport, $this->excel->getRealPath());
-            $this->resetUI();
-            $this->emit('masivaModal-modal', 'hide modal!');
+            $this->emit('masivaModal-hide', 'cierra modal');
             $this->alert('success', 'PRODUCTOS IMPORTADOS CON EXITO', [
                 'position' => 'center',
-
             ]);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             session()->flash('import_errors', $failures);
         }
+         
 
     }
 

@@ -14,35 +14,7 @@
                         <span>Ventas</span>
                     </div>
                 </a>
-            </li>
-
-            <li class="menu single-menu">
-                <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-home">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                        </svg>
-                        <span>Clientes</span>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-chevron-down">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </a>
-                <ul class="collapse submenu list-unstyled" id="menu1" data-parent="#topAccordion">
-                    <li>
-                        <a href="javascript:void(0);"> Submenu 1 </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"> Submenu 2 </a>
-                    </li>
-                </ul>
-            </li>
-
+            </li>           
 
             <li class="menu single-menu">
                 <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
@@ -56,7 +28,7 @@
                             <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                             <line x1="12" y1="22.08" x2="12" y2="12"></line>
                         </svg>
-                        <span>Bodega</span>
+                        <span>Productos</span>
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -79,11 +51,33 @@
                     </li>
                     <li>
                         <a href="{{url('/bodega')}}"> Bodega </a>
-                    </li>
+                    </li>                    
+                </ul>
+            </li>
+            <li class="menu single-menu">
+                <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="feather feather-home">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Compras</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-chevron-down">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </a>
+                <ul class="collapse submenu list-unstyled" id="menu1" data-parent="#topAccordion">
                     <li>
                         <a href="{{url('/compras')}}"> Compras </a>
                     </li>
-                    
+                    <li>
+                        <a href="javascript:void(0);"> Detalle Compras </a>
+                    </li>
                 </ul>
             </li>
             <li class="menu single-menu">
