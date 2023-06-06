@@ -103,19 +103,19 @@
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
                                                     <select class="form-select" wire:model="documento">
-                                                        <option>Selecciona un Documento</option>
+                                                        <option>Selecciona un documento</option>
                                                         <option>Factura</option>
                                                         <option>Boleta</option>
                                                     </select>
                                                 </div>
 
-                                                <div class="mb-2">
+                                                <div class="input-group-sm mb-2">
                                                     <label>Nro. Documento</label>
                                                     @error('num_documento')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
                                                     <input wire:model="num_documento" type="text"
-                                                        class="form-control">
+                                                        class="form-control sm">
                                                 </div>
 
                                                 <div class="mb-2">
@@ -126,7 +126,7 @@
                                                     <select class="form-select" wire:model="tipoPago">
                                                         <option>Selecciona tipo de pago</option>
                                                         <option>Efectivo</option>
-                                                        <option>Credito</option>
+                                                        <option>Crédito</option>
                                                     </select>
                                                 </div>
 

@@ -208,6 +208,7 @@ class Compras extends Component
         $this->num_documento = "";
         $this->tipoPago = "";
         $this->cantidad = "";
+        $this->cantidades = [];
         $this->carrito = [];
         $this->resetValidation();
 
