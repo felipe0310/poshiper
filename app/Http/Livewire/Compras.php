@@ -34,7 +34,9 @@ class Compras extends Component
     
     public function mount() 
     {
-        $this->productos = Producto::all()->toArray();              
+        $this->productos = Producto::all()->toArray();
+        $this->cantidades = [];
+        $this->precios = [];              
     }
     
     public function render()
@@ -144,38 +146,53 @@ class Compras extends Component
 
         $this->validate($rules, $messages);
 
+
         DB::transaction(function () {
-            
+
+            foreach ($this->carrito as $indice => $item) {                                   
+
+                $this->cantidad = $this->cantidades[$indice];
+                $this->precio = $this->precios[$indice];
+                $this->totalCompra = $this->calcularTotal();
+                $this->subtotal = $this->totalCompra / 1.19;
+            }
+
+            // Primero, crea una nueva compra.
+            $compra = Compra::create([
+                'proveedor_id' => $this->proveedor_id,
+                'documento' => $this->documento,
+                'num_documento' => $this->num_documento,
+                'iva' => $this->totalCompra - $this->subtotal,
+                'total_compra' => $this->totalCompra,
+                'subtotal' => $this->subtotal,
+                'tipo_pago' => $this->tipoPago,
+            ]);
+        
+
             // Luego, para cada producto en el carrito, crea un detalle de compra
             // y actualiza el stock en el depósito.
             foreach ($this->carrito as $indice => $item) {
-                    
-                $producto = Producto::find($item['producto_id']);
+
+                 if (!isset($this->cantidades[$indice]) || !isset($this->precios[$indice])) {
+                    continue; // Salta al próximo ciclo si no existen
+                }                   
+
                 $this->cantidad = $this->cantidades[$indice];
                 $this->precio = $this->precios[$indice];
                 $this->subtotal = $this->cantidades[$indice] * $this->precios[$indice];
+
+                $producto = Producto::find($item['producto_id']);
 
                 // Actualizar el stock en el depósito
                 $deposito = Deposito::where('producto_id', $producto->id)->first();
                 if (!empty($deposito)) {                    
                     $deposito->stock += $this->cantidades[$indice];
-                    $deposito->save();
-                
-                    // Primero, crea una nueva compra.
-                $compra = Compra::create([
-                    'proveedor_id' => $this->proveedor_id,
-                    'documento' => $this->documento,
-                    'num_documento' => $this->num_documento,
-                    'iva' => $this->iva,
-                    'total_compra' => $this->subtotal * $this->iva,
-                    'subtotal' => $this->cantidad * $this->precio,
-                    'tipo_pago' => $this->tipoPago,
-                ]);
+                    $deposito->save();                
 
                 // Crea un nuevo detalle de compra.
                 DetalleCompra::create([
                     'compra_id' => $compra->id,
-                    'nombre_producto' => $producto->descripcion,
+                    'producto_id' => $producto->id,
                     'cantidad' => $this->cantidades[$indice],
                     'total_compra' => $this->cantidades[$indice] * $this->precios[$indice],
                 ]);
@@ -185,12 +202,6 @@ class Compras extends Component
                 $producto->precio_compra = $this->precios[$indice];
                 $producto->save();
 
-                $this->alert('success', 'COMPRA EXISTOSA', ['position' => 'top']);
-
-                // Limpia el carrito después de la compra.         
-                $this->carrito = [];
-                $this->resetUI();
-
             }else{
 
             $this->alert('error', 'UNO O MAS PRODUCTOS NO EXISTEN EN LA BODEGA', ['position' => 'top']);
@@ -198,8 +209,15 @@ class Compras extends Component
 
                 }                    
             }
-        });
-    } 
+
+            $this->alert('success', 'COMPRA EXISTOSA', ['position' => 'top']);
+
+            // Limpia el carrito después de la compra.         
+            $this->carrito = [];
+            $this->resetUI();
+
+        });        
+    }
     
     public function resetUI()
     {
@@ -210,6 +228,7 @@ class Compras extends Component
         $this->cantidad = "";
         $this->cantidades = [];
         $this->carrito = [];
+        $this->totalCompra="";
         $this->resetValidation();
 
     }

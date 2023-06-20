@@ -1,7 +1,7 @@
 <div>
     <div class="page-header">
         <div class="page-title">
-            <h3>Registrar Compras | Productos</h3>
+            <h3>Editar Compras | Productos</h3>
         </div>
     </div>
     <div class="row">
@@ -22,7 +22,7 @@
                                                         <tr>
                                                             <td>
                                                                 <span class="form-control"
-                                                                    wire:click="agregarAlCarrito({{ $producto['id'] }})">
+                                                                    wire:click="seleccionarProducto({{ $producto['id'] }})">
                                                                     {{ $producto['descripcion'] }}
                                                                 </span>
                                                             </td>
@@ -43,31 +43,27 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($carrito as $indice => $item)
+                                                @foreach ($detalle_compras as $index => $detalle_compra)
                                                     <tr>
                                                         <td style="width: 50%">
-                                                            <label>{{ $item['nombre'] }}</label>
+                                                            <input type="text"
+                                                                wire:model="detalle_compras.{{ $index }}.producto.descripcion"
+                                                                class="form-control">
                                                         </td>
                                                         <td>
                                                             <input class="form-control text-center" type="number"
-                                                                wire:model.lazy="cantidades.{{ $indice }}">
+                                                                wire:model="detalle_compras.{{ $index }}.cantidad">
                                                         </td>
                                                         <td>
                                                             <input class="form-control text-center" type="number"
-                                                                wire:model.lazy="precios.{{ $indice }}"
-                                                                value="{{ $precios[$indice] }}">
+                                                                wire:model.lazy="detalle_compras.{{ $index }}.producto.precio_compra">
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-danger" type="button"
-                                                                onClick="Confirm({{ $indice }})">Eliminar</button>
+                                                                onClick="Confirm2({{ $index }})">Eliminar</button>
                                                         </td>
                                                     </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="4" class="text-center">AGREGA PRODUCTOS A LA
-                                                            COMPRA</td>
-                                                    </tr>
-                                                @endforelse
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -88,7 +84,7 @@
                                                     @error('proveedor_id')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="form-select" wire:model="proveedor_id">
+                                                    <select class="form-select" wire:model="compra.proveedor_id">
                                                         <option value="">Selecciona un proveedor</option>
                                                         @foreach ($proveedores as $proveedor)
                                                             <option value="{{ $proveedor->id }}">
@@ -102,7 +98,7 @@
                                                     @error('documento')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="form-select" wire:model="documento">
+                                                    <select class="form-select" wire:model="compra.documento">
                                                         <option>Selecciona un documento</option>
                                                         <option>Factura</option>
                                                         <option>Boleta</option>
@@ -114,7 +110,7 @@
                                                     @error('num_documento')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <input wire:model="num_documento" type="text"
+                                                    <input wire:model="compra.num_documento" type="text"
                                                         class="form-control sm">
                                                 </div>
 
@@ -123,18 +119,17 @@
                                                     @error('tipoPago')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="form-select" wire:model="tipoPago">
-                                                        <option>Selecciona tipo de pago</option>
+                                                    <select class="form-select" wire:model="compra.tipo_pago">
+                                                        <option>Selecciona forma de pago</option>
                                                         <option>Efectivo</option>
                                                         <option>Crédito</option>
                                                     </select>
                                                 </div>
 
                                             </div>
-                                            <button class="btn btn-info" wire:click.prevent="realizarCompra">Realizar la
-                                                Compra</button>
-                                            <button class="btn btn-danger float-end" wire:click.prevent="resetUI">Vaciar
-                                                Listado</button>
+                                            <button class="btn btn-info" wire:click.prevent="update">Actualizar</button>
+                                            <a class="btn btn-danger float-end"
+                                                href="{{ url('comprasDetalle') }}">Volver</a>
                                         </div>
                                     </div>
                                 </div>
@@ -155,9 +150,8 @@
         })
 
     });
-   
 
-    function Confirm(id) {
+    function Confirm2(id) {
         swal.fire({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL PRODUCTO?',

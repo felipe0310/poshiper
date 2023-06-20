@@ -29,9 +29,9 @@ class Compra extends Model
         return $this->hasMany(DetalleCompra::class);
     }
 
-    public function proovedor()
+    public function proveedor()
     {
-        return $this->hasMany(Prooveedor::class);
+        return $this->hasMany(Proveedor::class, 'proveedor_id');
     }
 
     protected $guarded = [];

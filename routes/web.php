@@ -8,9 +8,11 @@ use App\Http\Livewire\Depositos;
 use App\Http\Livewire\Empleados;
 use App\Http\Livewire\Productos;
 use App\Http\livewire\Categorias;
+use App\Http\Livewire\EditCompras;
 use App\Http\Livewire\Inventarios;
 use App\Http\Livewire\Proveedores;
 use App\Http\Livewire\DocAlmacenes;
+use App\Http\Livewire\DetalleCompras;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\InventarioSucursal;
 
@@ -46,3 +48,5 @@ Route::get('inventarios', InventarioSucursal::class);
 Route::get('inventario/{id}', Inventarios::class);
 Route::get('/productos/export', [Productos::class, 'export']);
 Route::get('compras', Compras::class);
+Route::get('comprasDetalle', DetalleCompras::class);
+Route::get('comprasEdit/{id}', EditCompras::class);

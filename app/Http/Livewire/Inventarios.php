@@ -15,44 +15,14 @@ class Inventarios extends Component
     use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
-
-    public $buscar;
-
-    public $seleccionar_id;
-
-    public $paginaTitulo;
-
+    private $paginacion = 10;
     public $nombreComponente;
 
-    private $paginacion = 7;
-
-    public $almacen_id;
-
-    public $producto_id;
-
-    public $usuario_id;
-
-    public $stock;
-
-    public $stock_minimo;
-
-    public $sucursalNombre;
-
-    public $almacenOrigen;
-
-    public $almacenDestino;
-
-    public $inventarioOrigen;
-
-    public $inventarioDestino;
-
-    public $producto;
-
-    public $nombreProducto;
+    public $buscar, $seleccionar_id, $paginaTitulo, $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo,
+    $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, $inventarioDestino, $producto,
+    $nombreProducto, $productosAgregar;
 
     public $stockIn = 0;
-
-    public $productosAgregar;
 
     protected $rules =
     [
@@ -164,7 +134,6 @@ class Inventarios extends Component
         $productos = Producto::all();
 
         foreach ($productos as $producto) {
-            // Suponiendo que tienes una relación entre Productos e Inventario
             $inventario = new Inventario();
             $inventario->producto_id = $producto->id;
             $inventario->almacen_id = $this->almacen_id;            
@@ -190,10 +159,6 @@ class Inventarios extends Component
             'position' => 'center',
         ]);
     }
-
-
-
-
 
     public function Edit(Inventario $inventario)
     {
@@ -451,7 +416,6 @@ class Inventarios extends Component
     {
         $this->showModal = false;
         $this->resetUI();
-
     }
 
     public function resetUI()
@@ -464,6 +428,5 @@ class Inventarios extends Component
         $this->stock_minimo = 0;
         $this->seleccionar_id = 0;
         $this->resetValidation();
-
     }
 }

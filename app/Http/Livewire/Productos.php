@@ -23,31 +23,7 @@ class Productos extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    public $descripcion;
-
-    public $codigo_barras;
-
-    public $precio_compra;
-
-    public $precio_venta;
-
-    public $precio_mayoreo;
-
-    public $precio_oferta;
-
-    public $categoria_id;
-
-    public $buscar;
-
-    public $seleccionar_id;
-
-    public $paginaTitulo;
-
-    public $nombreComponente;
-
-    public $proveedor_id;
-
-    public $cantidad_caja;
+    public $descripcion,$codigo_barras,$precio_compra,$precio_venta,$precio_mayoreo,$precio_oferta,$categoria_id,$buscar,$seleccionar_id,$paginaTitulo,$nombreComponente,$proveedor_id,$cantidad_caja;
 
     private $paginacion = 15;
 
@@ -98,7 +74,7 @@ class Productos extends Component
 
     public function render()
     {
-        if (strlen($this->buscar) > 2) {
+        if (strlen($this->buscar) > 3) {
             $productos = Producto::join('categorias as c', 'c.id', 'productos.categoria_id')
                 ->join('proveedores as pr', 'pr.id', 'productos.proveedor_id')
                 ->select('productos.*', 'c.nombre as categorias', 'pr.nombre as proveedores')

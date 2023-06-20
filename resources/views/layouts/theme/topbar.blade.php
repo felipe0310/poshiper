@@ -14,7 +14,7 @@
                         <span>Ventas</span>
                     </div>
                 </a>
-            </li>           
+            </li>
 
             <li class="menu single-menu">
                 <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
@@ -38,20 +38,20 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="menu2" data-parent="#topAccordion">
                     <li>
-                        <a href="{{url('/productos')}}"> Productos </a>
+                        <a href="{{ url('/productos') }}"> Productos </a>
                     </li>
                     <li>
-                        <a href="{{url('/inventarios')}}"> Inventarios </a>
-                    </li>                   
-                    <li>
-                        <a href="{{url('/categorias')}}"> Categorias </a>
+                        <a href="{{ url('/inventarios') }}"> Inventarios </a>
                     </li>
                     <li>
-                        <a href="{{url('/proveedores')}}"> Proveedores </a>
+                        <a href="{{ url('/categorias') }}"> Categorias </a>
                     </li>
                     <li>
-                        <a href="{{url('/bodega')}}"> Bodega </a>
-                    </li>                    
+                        <a href="{{ url('/proveedores') }}"> Proveedores </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/bodega') }}"> Bodega </a>
+                    </li>
                 </ul>
             </li>
             <li class="menu single-menu">
@@ -73,10 +73,10 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="menu1" data-parent="#topAccordion">
                     <li>
-                        <a href="{{url('/compras')}}"> Compras </a>
+                        <a href="{{ url('/compras') }}"> Compras </a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);"> Detalle Compras </a>
+                        <a href="{{ url('comprasDetalle') }}"> Detalle Compras </a>
                     </li>
                 </ul>
             </li>
@@ -99,20 +99,20 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="menu1" data-parent="#topAccordion">
                     <li>
-                        <a href="{{url('/empresas')}}"> Empresas </a>
+                        <a href="{{ url('/empresas') }}"> Empresas </a>
                     </li>
                     <li>
-                        <a href="{{url('/almacenes')}}"> Almacenes </a>
+                        <a href="{{ url('/almacenes') }}"> Almacenes </a>
                     </li>
                     <li>
-                        <a href="{{url('/clientes')}}"> Clientes </a>
+                        <a href="{{ url('/clientes') }}"> Clientes </a>
                     </li>
                     <li>
-                        <a href="{{url('/docAlmacenes')}}"> Doc. Almacenes </a>
+                        <a href="{{ url('/docAlmacenes') }}"> Doc. Almacenes </a>
                     </li>
                     <li>
-                        <a href="{{url('/empleados')}}"> Empleados </a>
-                    </li>                     
+                        <a href="{{ url('/empleados') }}"> Empleados </a>
+                    </li>
                 </ul>
             </li>
         </ul>

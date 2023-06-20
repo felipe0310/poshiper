@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -17,7 +16,7 @@ class DetalleCompra extends Model
     protected $fillable =
     [
         'compra_id',
-        'nombre_producto',
+        'producto_id',
         'cantidad',
         'total_compra'
     ];
@@ -27,5 +26,10 @@ class DetalleCompra extends Model
         return $this->belongsTo(Compra::class);
     }
 
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, 'producto_id'); // pertenece a una categoria
+    }
+    
     protected $guarded = [];
 }
