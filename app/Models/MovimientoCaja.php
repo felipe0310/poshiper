@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Almacen;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Caja extends Model
+class MovimientoCaja extends Model
 {
     use HasFactory;
 
-    protected $table = 'cajas';
+    protected $table = 'movimiento_cajas';
 
     protected $primaryKey = 'id';
 
@@ -18,13 +19,9 @@ class Caja extends Model
     [
         'usuario_id ',
         'almacen_id ',
-        'fecha_apertura',
-        'fecha_cierre',
-        'monto_apertura',
-        'monto_ingreso',
-        'monto_egreso',
-        'monto_cierre',
-        'estado',
+        'tipo',
+        'descripcion',
+        'monto'
     ];
 
     public function almacenes()
@@ -36,6 +33,9 @@ class Caja extends Model
     {
         return $this->belongsTo(User::class, 'usuario_id'); 
     }
+
+
+
 
 
 }

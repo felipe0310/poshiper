@@ -2,37 +2,31 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Caja;
 use App\Models\Almacen;
-use App\Models\Inventario;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class InventarioSucursal extends Component
+class Cajas extends Component
 {
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
 
-    public $buscar;
-
     public $paginaTitulo;
 
     public $nombreComponente;
 
-    private $paginacion = 7;
-
     public function mount()
     {
         $this->paginaTitulo = 'Listado';
-        $this->nombreComponente = 'Inventarios';
+        $this->nombreComponente = 'Cajas';
     }
 
     public function render()
     {
-        $inventarios = Inventario::with('productos.categorias', 'almacenes')->get();
-
-        return view('livewire.inventario.inventarios', [
-            'inventarios' => $inventarios,
+        return view('livewire.caja.cajas', [
+            
             'almacenes' => Almacen::orderBy('descripcion', 'asc')->get(),
 
         ])
@@ -40,8 +34,8 @@ class InventarioSucursal extends Component
             ->section('content');
     }
 
-    public function verSucursal($id)
+    public function verCaja($id)
     {
-        return redirect('inventario/'.$id);
+        return redirect('caja/'.$id);
     }
 }

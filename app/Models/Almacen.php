@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Caja;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Almacen extends Model
 {
@@ -36,6 +37,13 @@ class Almacen extends Model
     {
         return $this->hasMany(DocAlmacen::class); // pertenece a una empresa
     }
+
+    public function cajas()
+    {
+        return $this->hasMany(Caja::class); // pertenece a una empresa
+    }
+
+
 
     protected $guarded = [];
 }

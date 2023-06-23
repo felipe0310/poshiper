@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Cajas;
 use App\Http\Livewire\Compras;
 use App\Http\Livewire\Clientes;
 use App\Http\Livewire\Empresas;
@@ -11,6 +12,7 @@ use App\Http\livewire\Categorias;
 use App\Http\Livewire\EditCompras;
 use App\Http\Livewire\Inventarios;
 use App\Http\Livewire\Proveedores;
+use App\Http\Livewire\CajaSucursal;
 use App\Http\Livewire\DocAlmacenes;
 use App\Http\Livewire\DetalleCompras;
 use Illuminate\Support\Facades\Route;
@@ -50,3 +52,5 @@ Route::get('/productos/export', [Productos::class, 'export']);
 Route::get('compras', Compras::class);
 Route::get('comprasDetalle', DetalleCompras::class);
 Route::get('comprasEdit/{id}', EditCompras::class);
+Route::get('cajas', Cajas::class);
+Route::get('caja/{id}', CajaSucursal::class);
