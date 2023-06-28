@@ -9,7 +9,6 @@
             <div class="col-lg-4 mt-2">
                 <div class="card text-center border-primary">
                     <div class="card-body">
-                        <h5>Sucursal</h5>
                         <h5 class="card-title">{{ $almacen->descripcion }}</h5>
                         <p class="card-text">{{ $almacen->ubicacion }}</p>
                         <button wire:click="verSucursal({{$almacen->id}})" class="btn btn-info">Ir a Inventario</button>
