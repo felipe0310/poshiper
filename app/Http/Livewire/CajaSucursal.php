@@ -97,6 +97,7 @@ class CajaSucursal extends Component
             $caja->almacen_id = $this->almacen_id;
             $caja->fecha_apertura = Carbon::now();                  
             $caja->monto_apertura = $this->monto_apertura;
+            $caja->fecha_cierre = null;
             $caja->monto_ingreso += 0;
             $caja->monto_egreso += 0;
             $caja->monto_cierre += 0;
@@ -233,6 +234,7 @@ class CajaSucursal extends Component
 
         $cajaCierre = Caja::find($this->cajaCierreID)->first();    
         $cajaCierre->estado = 0;
+        $cajaCierre->fecha_cierre = Carbon::now(); 
         $cajaCierre->monto_cierre = $this->monto_cierre;
         $cajaCierre->save();
         
@@ -251,6 +253,11 @@ class CajaSucursal extends Component
             'position' => 'top',
         ]);
 
+    }
+
+    public function movimientoCaja($id)
+    {
+        return redirect('movimientoCaja/'.$id);
     }
 
     protected $listeners = [

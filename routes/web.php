@@ -16,6 +16,7 @@ use App\Http\Livewire\CajaSucursal;
 use App\Http\Livewire\DocAlmacenes;
 use App\Http\Livewire\DetalleCompras;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\MovimientoCajas;
 use App\Http\Livewire\InventarioSucursal;
 
 /*
@@ -54,3 +55,4 @@ Route::get('comprasDetalle', DetalleCompras::class);
 Route::get('comprasEdit/{id}', EditCompras::class);
 Route::get('cajas', Cajas::class);
 Route::get('caja/{id}', CajaSucursal::class);
+Route::get('movimientoCaja/{id}', MovimientoCajas::class);
