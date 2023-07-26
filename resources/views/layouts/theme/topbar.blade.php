@@ -52,6 +52,9 @@
                     <li>
                         <a href="{{ url('/bodega') }}"> Bodega </a>
                     </li>
+                    <li>
+                        <a href="{{ url('/historialProducto') }}"> Historial </a>
+                    </li>
                 </ul>
             </li>
             <li class="menu single-menu">

@@ -41,5 +41,10 @@ class Producto extends Model
         return $this->hasMany(Categoria::class, 'id'); // pertenece a una categoria
     }
 
+    public function historiales()
+    {
+        return $this->hasMany(Historial::class, 'producto_id', 'id');
+    }
+
     protected $guarded = [];
 }
