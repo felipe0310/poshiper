@@ -193,7 +193,7 @@ class CajaSucursal extends Component
 
         $this->validate($rules, $messages);    
 
-        $cajaEgreso = Caja::where('almacen_id',$this->almacen_id)->first();        
+        $cajaEgreso = Caja::where('estado',1)->first();        
         $cajaEgreso->monto_egreso += $this->monto_egreso;
         $cajaEgreso->save();
 

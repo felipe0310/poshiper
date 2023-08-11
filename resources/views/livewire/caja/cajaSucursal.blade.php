@@ -47,7 +47,7 @@
                                     <tr>
                                         <td>{{ $caja->fecha_apertura }}</td>
                                         <td>{{ $caja->fecha_cierre }}</td>
-                                        <td>$ {{ number_format($caja->monto_apertura, 0, ',', '.') }}</td>
+                                        <td class="col-1">$ {{ number_format($caja->monto_apertura, 0, ',', '.') }}</td>
                                         <td>$ {{ number_format($caja->monto_ingreso, 0, ',', '.') }}</td>
                                         <td>$ {{ number_format($caja->monto_egreso, 0, ',', '.') }}</td>
                                         <td>$ {{ number_format($caja->monto_cierre, 0, ',', '.') }}</td>
