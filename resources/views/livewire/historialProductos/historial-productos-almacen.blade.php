@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $almacen->descripcion }}</h5>
                         <p class="card-text">{{ $almacen->ubicacion }}</p>
-                        <button wire:click="verSucursal({{$almacen->id}})" class="btn btn-info">Ver Ventas</button>
+                        <button wire:click="verSucursal({{$almacen->id}})" class="btn btn-info">Ver Movimientos</button>
                     </div>
                 </div>
             </div>

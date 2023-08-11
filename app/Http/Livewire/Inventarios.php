@@ -3,11 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\Almacen;
-use App\Models\Inventario;
-use App\Models\Producto;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Models\Producto;
+use App\Models\Historial;
+use App\Models\Inventario;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Inventarios extends Component
 {
@@ -20,7 +21,7 @@ class Inventarios extends Component
 
     public $buscar, $seleccionar_id, $paginaTitulo, $almacen_id, $producto_id, $usuario_id, $stock, $stock_minimo,
     $sucursalNombre, $almacenOrigen, $almacenDestino, $inventarioOrigen, $inventarioDestino, $producto,
-    $nombreProducto, $productosAgregar;
+    $nombreProducto, $productosAgregar, $productosDisponibles = [];
 
     public $stockIn = 0;
 
@@ -57,7 +58,7 @@ class Inventarios extends Component
         })
             ->whereNull('inventarios.id')
             ->select('productos.*')
-            ->get();
+            ->get();           
 
     }
 
@@ -134,30 +135,44 @@ class Inventarios extends Component
         $productos = Producto::all();
 
         foreach ($productos as $producto) {
-            $inventario = new Inventario();
-            $inventario->producto_id = $producto->id;
-            $inventario->almacen_id = $this->almacen_id;            
-            $inventario->usuario_id = 1;
-            $inventario->stock = 0;
-            $inventario->stock_minimo = 0;
-            // otras columnas que puedas necesitar llenar
-            $inventario->save();
+            // Verificar si el producto ya existe en el inventario
+            $inventarioExistente = Inventario::where('producto_id', $producto->id)
+                ->where('almacen_id', $this->almacen_id)
+                ->first();
+
+            if (!$inventarioExistente) {
+                $inventario = new Inventario();
+                $inventario->producto_id = $producto->id;
+                $inventario->almacen_id = $this->almacen_id;
+                $inventario->usuario_id = 1;
+                $inventario->stock = 0;
+                $inventario->stock_minimo = 0;
+                // otras columnas que puedas necesitar llenar
+                $inventario->save();
+
+                Historial::create([
+                    'producto_id' => $producto->id,
+                    'usuario_id' => 1,
+                    'almacen_id' => $this->almacen_id,
+                    'motivo' => 'Alta Inicial',
+                    'cantidad' => 0,
+                    'tipo' => 'Entrada',
+                    'stock_antiguo' => 0,
+                    'stock_nuevo' => 0,
+                ]);
+            }
         }
 
-        // actualizar la lista de productos
-        $this->productosAgregar = Producto::leftJoin('inventarios', function ($join) {
-            $join->on('productos.id', '=', 'inventarios.producto_id')
-                ->where('inventarios.almacen_id', '=', $this->almacen_id);
-        })
-            ->whereNull('inventarios.id')
-            ->select('productos.*')
-            ->get();
+        // Actualizar la lista de productos
+        $productosIngresados = Inventario::pluck('producto_id')->toArray();
+        $this->productosDisponibles = Producto::whereNotIn('id', $productosIngresados)->get();
 
-        // mostrar un mensaje de éxito
-        $this->resetUI();
-        $this->alert('success', 'TODOS LOS PRODUCTOS FUERON AGREGADO CON EXITO', [
+        // Mostrar un mensaje de éxito
+        $this->emit('refresh');
+        $this->alert('success', 'TODOS LOS PRODUCTOS FUERON AGREGADOS CON ÉXITO', [
             'position' => 'center',
         ]);
+        
     }
 
     public function Edit(Inventario $inventario)
@@ -209,7 +224,23 @@ class Inventarios extends Component
 
     public function Destroy(Inventario $inventario)
     {
-        $inventario->delete();
+        
+        $this->almacenOrigen = $inventario->almacen_id;
+        $this->producto_id = $inventario->producto_id;
+        $this->stock = $inventario->stock;       
+        
+        Historial::create([
+        'producto_id' => $this->producto_id,
+        'usuario_id' => 1,
+        'almacen_id' => $this->almacenOrigen,
+        'motivo' => 'Eliminado',
+        'cantidad' => $this->stock,
+        'tipo' => 'Salida',
+        'stock_antiguo' => $this->stock,
+        'stock_nuevo' => $this->stock -= $this->stock,
+        ]);              
+        
+        $inventario->delete();         
         $this->resetUI();
         $this->alert('success', 'PRODUCTO ELIMINADO CON EXITO', [
             'position' => 'center',
@@ -285,12 +316,34 @@ class Inventarios extends Component
                 $this->alert('error', 'NO HAY STOCK SUFICIENTE PARA TRASLADAR', [
                     'position' => 'center',
                 ]);
-            } else {
+            } else {                               
+
+                Historial::create([
+                'producto_id' => $this->producto_id,
+                'usuario_id' => 1,
+                'almacen_id' => $this->almacenOrigen,
+                'motivo' => 'Traslado' .' '. $almacenDestino->descripcion,
+                'cantidad' => $this->stockIn,
+                'tipo' => 'Salida',
+                'stock_antiguo' => $this->stock,
+                'stock_nuevo' => $this->stock -= $this->stockIn,
+                ]);                
+
+                Historial::create([
+                'producto_id' => $this->producto_id,
+                'usuario_id' => 1,
+                'almacen_id' => $this->almacenDestino,
+                'motivo' => 'Traslado' .' '. $almacenOrigen->descripcion,
+                'cantidad' => $this->stockIn,
+                'tipo' => 'Entrada',
+                'stock_antiguo' => $this->stock,
+                'stock_nuevo' => $this->stock += $this->stockIn,
+                ]);
 
                 // Restar stock del almacen de origen
                 $inventarioOrigen->stock -= $this->stockIn;
-                $inventarioOrigen->save();
-
+                $inventarioOrigen->save(); 
+                
                 // Agregar stock al almacen de destino
                 $inventarioDestino->stock += $this->stockIn;
                 $inventarioDestino->save();
@@ -343,6 +396,17 @@ class Inventarios extends Component
         $inventarioDestino = Inventario::where('producto_id', $this->producto_id)
             ->where('almacen_id', $this->almacenOrigen)
             ->first();
+
+        Historial::create([
+        'producto_id' => $this->producto_id,
+        'usuario_id' => 1,
+        'almacen_id' => $this->almacenOrigen,
+        'motivo' => 'Ajuste Stock',
+        'cantidad' => $this->stockIn,
+        'tipo' => 'Entrada',
+        'stock_antiguo' => $this->stock,
+        'stock_nuevo' => $this->stock += $this->stockIn,
+        ]);
 
         // Agregar stock al almacen de destino
         $inventarioDestino->stock += $this->stockIn;
@@ -399,8 +463,20 @@ class Inventarios extends Component
 
         } else {
 
+            Historial::create([
+            'producto_id' => $this->producto_id,
+            'usuario_id' => 1,
+            'almacen_id' => $this->almacenOrigen,
+            'motivo' => 'Ajuste Stock',
+            'cantidad' => $this->stockIn,
+            'tipo' => 'Salida',
+            'stock_antiguo' => $this->stock,
+            'stock_nuevo' => $this->stock -= $this->stockIn,
+            ]);
+
             $inventarioDestino->stock -= $this->stockIn;
-            $inventarioDestino->save();
+            $inventarioDestino->save();            
+
             // Redireccionar a la página de inventario
             $this->resetUI();
             $this->emit('item-restar', 'Producto Trasladado');

@@ -13,7 +13,7 @@ class Historial extends Model
 
     protected $fillable =
     [
-        'producto_id','usuario_id','almacen_id','motivo','stock','tipo','estado','stock_antiguo','stock_nuevo','fecha_registro'
+        'producto_id','usuario_id','almacen_id','motivo','cantidad','tipo','estado','stock_antiguo','stock_nuevo'
     ];
 
     public function productos()

@@ -17,12 +17,10 @@ return new class extends Migration
             $table->foreignId('usuario_id')->constrained('users');
             $table->foreignId('almacen_id')->constrained('almacenes');
             $table->string('motivo');
-            $table->integer('stock');
+            $table->integer('cantidad');
             $table->string('tipo');
-            $table->integer('estado');
             $table->integer('stock_antiguo');
             $table->integer('stock_nuevo');
-            $table->time('fecha_registro');
             $table->timestamps();
         });
     }

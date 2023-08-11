@@ -4,17 +4,21 @@
             <h3>{{ $nombreComponente }} | {{ $paginaTitulo }}</h3>
         </div>
         <div>
-            <a href="javascript:void(0)" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#theModal">
+            {{-- <a href="javascript:void(0)" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#theModal">
                 Agregar
-            </a>
+            </a> --}}
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 layout-spacing">
             <div class="statbox widget box box-shadow">
                 <div class="widget-content widget-content-area">
-                    <div>
-                        <h5 class="col-sm-12">Sucursal : {{ $sucursalNombre }} </h5>
+                    <div class="input-group mb-3">
+                        <h5 class="col-lg-9">Sucursal : {{ $sucursalNombre }} </h5>
+                        <div class="col-lg-1">
+                            <p>Selecciona una fecha</p>
+                        </div>                        
+                        <input type="date" class="form-control col-lg-2" wire:model="fechaSeleccionada">                             
                     </div>
                     <div class="table-responsive">
                         @include('common.searchbox')
@@ -22,43 +26,29 @@
                             <thead>
                                 <tr>
                                     <th>Descripcion</th>
-                                    <th>Motivo</th>
-                                    <th>Cantidad</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                    <th>Habia</th>
-                                    <th>Hay</th>
-                                    <th>Fecha</th>
-                                    <th class="text-center">Acción</th>
+                                    <th class="text-center">Motivo</th>                                    
+                                    <th class="text-center">Tipo</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-center">Habia</th>
+                                    <th class="text-center">Hay</th>
+                                    <th class="text-center">Fecha</th>                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($historiales as $data)
                                     <tr>
                                         <td>{{ $data->productos->descripcion }}</td>
-                                        <td>{{ $data->motivo }}</td>
-                                        <td>{{ $data->stock }}</td>
-                                        <td>{{ $data->tipo }}</td>
-                                        <td>{{ $data->estado }}</td>
-                                        <td>{{ $data->stock_antiguo }}</td>
-                                        <td>{{ $data->stock_nuevo }}</td>
-                                        <td>{{ $data->fecha_registro }}</td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" class="btn btn-warning"
-                                                wire:click="Edit('{{ $data->id }}')" title="Editar">
-                                                <i class="fas fa-edit" aria-hidden="true"></i>
-                                            </a>
-                                            <a href="javascript:void(0)" class="btn btn-danger"
-                                                onclick="Confirm('{{ $data->id }}'"
-                                                title="Eliminar">
-                                                <i class="fas fa-trash" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
+                                        <td class="text-center">{{ $data->motivo }}</td>
+                                        <td class="text-center">{{ $data->tipo }}</td>
+                                        <td class="text-center">{{ $data->cantidad }}</td>                                        
+                                        <td class="text-center">{{ $data->stock_antiguo }}</td>
+                                        <td class="text-center">{{ $data->stock_nuevo }}</td>
+                                        <td class="text-center">{{ $data->created_at }}</td>                                        
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        {{-- {{ $categorias->links() }} --}}
+                        {{ $historiales->links() }}
                     </div>
                 </div>
             </div>

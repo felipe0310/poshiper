@@ -139,12 +139,18 @@ class Depositos extends Component
         $productos = Producto::all();
 
         foreach ($productos as $producto) {
+            // Verificar si el producto ya existe en el inventario
+            $productoExistente = Deposito::where('producto_id', $producto->id)
+                ->first();
+
+           if (!$productoExistente) {     
             // Suponiendo que tienes una relación entre Productos e Inventario
             $deposito = new Deposito();
             $deposito->producto_id = $producto->id;
             $deposito->stock = 0;
             // otras columnas que puedas necesitar llenar
             $deposito->save();
+           }
         }
 
         // actualizar la lista de productos
@@ -157,16 +163,6 @@ class Depositos extends Component
             'position' => 'center',
         ]);
     }
-
-
-
-
-
-
-
-
-
-
 
 
     public function Update()
