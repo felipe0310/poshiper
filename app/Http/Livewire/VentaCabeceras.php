@@ -7,11 +7,13 @@ use App\Models\Caja;
 use App\Models\Cliente;
 use Livewire\Component;
 use App\Models\Producto;
+use App\Models\Historial;
 use App\Models\DocAlmacen;
 use App\Models\Inventario;
 use Livewire\WithPagination;
 use App\Models\DetalleCompra;
 use App\Models\VentaCabecera;
+use App\Models\MovimientoCaja;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -28,7 +30,7 @@ class VentaCabeceras extends Component
     public $precios = [];
     public $busqueda;
     public $carrito = [];
-    public $cliente_id;
+    public $cliente_id = '4';
     public $documento = 'Boleta';
     public $num_documento;
     public $tipoPago;
@@ -41,11 +43,14 @@ class VentaCabeceras extends Component
     public $numeroDocumento;
     public $busquedaCliente;
     public $selectedClientId;
-    public $pagoEfectivo = 0;
+    public $pagoEfectivo;
+    public $pagoEfectivo2;
+    public $pagoTarjeta2;
+    public $pagoTransferencia2;
 
     public function mount($id) 
     {
-        $this->productos = Producto::all()->toArray();
+        $this->productos = Producto::all()->toArray();        
         $this->cantidades = [];
         $this->precios = [];
         $this->almacen_id = $id;
@@ -60,20 +65,19 @@ class VentaCabeceras extends Component
                                          
         $clientes = Cliente::where('nombre', 'LIKE', '%' . $this->busquedaCliente . '%')
                             ->orWhere('apellido', 'LIKE', '%' . $this->busquedaCliente . '%')
-                            ->get();                                
+                            ->get();
         
         return view('livewire.venta.venta-cabeceras',[            
             'clientes' => $clientes,
             'docAlmacenes' => $this->docAlmacenes,
             'precios' => $this->precios, 
             'total' => $this->calcularTotal(),
-            'vuelto' => $this->calcularVuelto()
-
+            'vuelto' => $this->calcularVuelto(),
         ])
         ->extends('layouts.theme.app')
         ->section('content');
-    } 
-
+    }   
+    
     public function selectClient($clientId)
     {
         $this->selectedClientId = $clientId;
@@ -130,22 +134,33 @@ class VentaCabeceras extends Component
     {
         $producto = Producto::find($idProducto);
 
-        foreach ($this->carrito as $productoSeleccionado) {
-            if ($productoSeleccionado['producto_id'] == $idProducto) {
-                $this->busqueda = "";            
-                $this->alert('error', 'EL PRODUCTO YA EXISTE EN EL CARRITO', ['position' => 'top']);
+        $inventarioProducto = Inventario::where('producto_id', $producto->id)
+                                        ->where('almacen_id', $this->almacen_id)
+                                        ->first();        
+        
+        if ($inventarioProducto->stock <= 0) {
+                $this->busqueda = "";                
+                $this->alert('error', 'NO HAY STOCK DISPONIBLE', [
+                    'position' => 'top',
+                ]);
                 return;
-            } 
-        }        
-            
-            if ($producto) {
-                $this->carrito[] = [
-                    'producto_id' => $producto->id,
-                    'nombre' => $producto->descripcion,
-                    $this->cantidades[] = 1,
-                    $this->precios[] = $producto->precio_venta
-                ];                       
-            }   
+        }
+        
+        if (in_array($idProducto, array_column($this->carrito, 'producto_id'))) {
+
+            $this->alert('error', 'EL PRODUCTO YA EXISTE EN EL CARRITO', ['position' => 'top']);
+            return;
+        }       
+        
+        if ($producto) {
+
+            $this->carrito[] = [
+                'producto_id' => $producto->id,
+                'nombre' => $producto->descripcion,
+                'cantidades' => 1,
+                'precios' => $producto->precio_venta
+            ];
+        }
             
         $this->alert('success', 'PRODUCTO AGREGADO', ['position' => 'top']);                       
            
@@ -153,6 +168,29 @@ class VentaCabeceras extends Component
         
     }
 
+    public function obtenerStockDisponible($productoId)
+    {
+        $inventarioProducto = Inventario::where('producto_id', $productoId)
+            ->where('almacen_id', $this->almacen_id)
+            ->first();
+
+        return $inventarioProducto ? $inventarioProducto->stock : 0;
+    }
+    
+    public function updatedCarrito()
+    {
+        foreach ($this->carrito as $indice => $item) {
+            $stockDisponible = $this->obtenerStockDisponible($item['producto_id']);
+
+            if ($item['cantidades'] > $stockDisponible) {
+                // Si la cantidad ingresada supera el stock disponible, establecer la cantidad al stock disponible
+                $this->carrito[$indice]['cantidades'] = $stockDisponible;
+                $this->alert('error', 'LA CANTIDAD INGRESADA SUPERA EL STOCK DISPONIBLE', ['position' => 'top']);
+            }
+        }
+    }
+
+    
     public function eliminarDelCarrito($indice)
     {       
 
@@ -167,15 +205,17 @@ class VentaCabeceras extends Component
     public $listeners = [
         'removeItem' => 'eliminarDelCarrito',
                         'updatedDocumento',
-                        'resetSelect2'
+                        'resetSelect2',
+                        'obtenerStockDisponible'
+
     ];
     
     public function calcularTotal()
     {
-        $total = 0;
+        $total = 0;       
 
-        foreach ($this->carrito as $indice => $item) {
-            $subtotal = $this->precios[$indice] * $this->cantidades[$indice];
+        foreach ($this->carrito as $indice) {
+            $subtotal = $indice['precios'] * $indice['cantidades'];
             $total += $subtotal;
         }
 
@@ -184,10 +224,19 @@ class VentaCabeceras extends Component
 
     public function calcularVuelto()
     {
-        $vuelto = $this->pagoEfectivo - $this->calcularTotal();
-        
-        return $vuelto;
 
+        if($this->tipoPago === 'Mixto' ){
+            
+            $pagoMixto = intval($this->pagoEfectivo2) + $this->pagoTarjeta2 + $this->pagoTransferencia2;
+            $vuelto =  $this->calcularTotal() - intval($pagoMixto);
+            return $vuelto; 
+
+        }else{
+            
+            $vuelto = intval($this->pagoEfectivo) - $this->calcularTotal(); 
+            return $vuelto;
+        }
+        
     }
 
     public function getCajaDelDia()
@@ -203,22 +252,20 @@ class VentaCabeceras extends Component
     }
 
     public function realizarVenta()
-    {                    
-    
+    {   
         if(empty($this->carrito)){
         $this->alert('error', 'AGREGE PRODUCTOS A LA VENTA', ['position' => 'top']);
         return;             
         }            
         
         $rules =
-        [
-            'cliente_id' => 'required',            
+        [                       
             'documento' => 'required',
             'tipoPago' => 'required',
         ];
 
-        $messages = [
-            'cliente_id.required' => 'El cliente es requerido.',
+        $messages =
+        [            
             'documento.required' => 'El tipo de documento es requerido.',
             'tipoPago.required' => 'La forma de pago es requerido.',
         ];
@@ -229,71 +276,114 @@ class VentaCabeceras extends Component
             $vuelto = $this->calcularVuelto();
             if ($vuelto < 0) {
                 $vuelto = $this->calcularVuelto();
-                $this->alert('error', 'Verifique el monto recibido', ['position' => 'top']);
+                $this->alert('error', 'VERIFIQUE EL MONTO RECIBIDO', ['position' => 'top']);
                 return;
             }
-        }                   
+        }
+        
+        if($this->tipoPago === 'Mixto'){
+            $vuelto = $this->calcularVuelto();
+            if ($vuelto > 0) {
+                $vuelto = $this->calcularVuelto();
+                $this->alert('error', 'VERIFIQUE EL MONTO RECIBIDO', ['position' => 'top']);
+                return;
+            }
+        }
         
         DB::transaction(function () {
 
             foreach ($this->carrito as $indice => $item) {                                   
 
-                $this->cantidad = $this->cantidades[$indice];
-                $this->precio = $this->precios[$indice];
+                $this->cantidad = $this->carrito[$indice]['cantidades'];
+                $this->precio = $this->carrito[$indice]['precios'];
                 $this->totalCompra = $this->calcularTotal();
                 $this->subtotal = $this->totalCompra / 1.19;
             }            
 
-            // Primero, crea una nueva compra.
-            $venta = VentaCabecera::create([
-                'cliente_id' => $this->cliente_id,
-                'almacen_id' => $this->almacen_id,
-                'usuario_id' => 1,
-                'docalmacen_id' => $this->documento,
-                'caja_id' => $this->cajaDia->id,
-                'serie' => ($this->documento === 'Boleta') ? 'B' : 'F',
-                'nro_comprobante' => $this->numeroDocumento,
-                'descripcion' => 'Venta',
-                'pago_efectivo' => ($this->tipoPago === 'Efectivo') ? $this->totalCompra : 0,
-                'pago_tarjeta' => ($this->tipoPago === 'Tarjeta') ? $this->totalCompra : 0,
-                'pago_transferencia' => ($this->tipoPago === 'Transferencia') ? $this->totalCompra : 0,
-                'pago_credito' => ($this->tipoPago === 'Credito') ? $this->totalCompra : 0,
-                'delivery' => 0,
-                'iva' => $this->totalCompra - $this->subtotal,
-                'total_venta' => $this->totalCompra,
-                'subtotal' => $this->subtotal,
-                'tipo_pago' => $this->tipoPago,
-            ]);
-        
+            // Primero, crea una nueva compra. 
 
+            if($this->tipoPago === 'Mixto'){
+                $venta = VentaCabecera::create([
+                    'cliente_id' => $this->cliente_id,
+                    'almacen_id' => $this->almacen_id,
+                    'usuario_id' => 1,
+                    'docalmacen_id' => $this->documento,
+                    'caja_id' => $this->cajaDia->id,
+                    'serie' => ($this->documento === 'Boleta') ? 'B' : 'F',
+                    'nro_comprobante' => $this->numeroDocumento,
+                    'descripcion' => 'Venta',                
+                    'pago_efectivo' => $this->pagoEfectivo2,
+                    'pago_tarjeta' => $this->pagoTarjeta2,
+                    'pago_transferencia' => $this->pagoTransferencia2,
+                    'pago_credito' => 0,
+                    'delivery' => 0,
+                    'iva' => $this->totalCompra - $this->subtotal,
+                    'total_venta' => $this->totalCompra,
+                    'subtotal' => $this->subtotal,
+                    'tipo_pago' => $this->tipoPago,
+                ]);
+            }else{ 
+                $venta = VentaCabecera::create([
+                    'cliente_id' => $this->cliente_id,
+                    'almacen_id' => $this->almacen_id,
+                    'usuario_id' => 1,
+                    'docalmacen_id' => $this->documento,
+                    'caja_id' => $this->cajaDia->id,
+                    'serie' => ($this->documento === 'Boleta') ? 'B' : 'F',
+                    'nro_comprobante' => $this->numeroDocumento,
+                    'descripcion' => 'Venta',                
+                    'pago_efectivo' => ($this->tipoPago === 'Efectivo') ? $this->totalCompra : 0,
+                    'pago_tarjeta' => ($this->tipoPago === 'Tarjeta') ? $this->totalCompra : 0,
+                    'pago_transferencia' => ($this->tipoPago === 'Transferencia') ? $this->totalCompra : 0,
+                    'pago_credito' => ($this->tipoPago === 'Credito') ? $this->totalCompra : 0,
+                    'delivery' => 0,
+                    'iva' => $this->totalCompra - $this->subtotal,
+                    'total_venta' => $this->totalCompra,
+                    'subtotal' => $this->subtotal,
+                    'tipo_pago' => $this->tipoPago,
+                ]);
+            }                          
+        
             // Luego, para cada producto en el carrito, crea un detalle de compra
             // y actualiza el stock en el depósito.
             foreach ($this->carrito as $indice => $item) {
 
-                 if (!isset($this->cantidades[$indice]) || !isset($this->precios[$indice])) {
+                 if (!isset($this->carrito[$indice]['cantidades']) || !isset($this->carrito[$indice]['precios'])) {
                     continue; // Salta al próximo ciclo si no existen
                 }                   
 
-                $this->cantidad = $this->cantidades[$indice];
-                $this->precio = $this->precios[$indice];
-                $this->subtotal = $this->cantidades[$indice] * $this->precios[$indice];
+                $this->cantidad = $this->carrito[$indice]['cantidades'];
+                $this->precio = $this->carrito[$indice]['precios'];
+                $this->subtotal = $this->carrito[$indice]['cantidades'] * $this->carrito[$indice]['precios'];
 
-                $producto = Producto::find($item['producto_id']);
+                $producto = Producto::find($item['producto_id']); //algo malo esta aqui
 
                 // Actualizar el stock en el depósito
                 $inventario = Inventario::where('producto_id', $producto->id)->first();
+
+                // Crea un nuevo detalle de historial.
+                Historial::create([
+                'producto_id' => $producto->id,
+                'usuario_id' => 1,
+                'almacen_id' => $this->almacen_id,
+                'motivo' => 'Venta',
+                'cantidad' => $this->cantidad,
+                'tipo' => 'Salida',
+                'stock_antiguo' => $inventario->stock,
+                'stock_nuevo' => $inventario->stock - $this->cantidad,
+                ]);                 
+
                 if (!empty($inventario)) {
                     $inventario->almacen_id = $this->almacen_id;                    
-                    $inventario->stock -= $this->cantidades[$indice];
-                    $inventario->save();                
-
-                // Crea un nuevo detalle de compra.
+                    $inventario->stock -= $this->cantidad;
+                    $inventario->save();                           
+                 
                 //
 
                 // Actualiza el precio de compra del producto si ha cambiado.
                 
-                $producto->precio_compra = $this->precios[$indice];
-                $producto->save();
+                //$producto->precio_compra = $this->precios[$indice];
+                //$producto->save();
 
             }else{
 
@@ -306,6 +396,18 @@ class VentaCabeceras extends Component
             $this->alert('success', 'VENTA EXISTOSA', ['position' => 'top']);
 
             $this->incrementarNumeroDocumento();
+
+            $cajaIngreso = $this->getCajaDelDia();  
+            $cajaIngreso->monto_ingreso += $this->calcularTotal();
+            $cajaIngreso->save();            
+            
+            $movimientos = new MovimientoCaja();
+            $movimientos->usuario_id = 1;
+            $movimientos->almacen_id = $this->almacen_id;
+            $movimientos->tipo = "Ingreso";
+            $movimientos->descripcion = "Venta";
+            $movimientos->monto = $this->calcularTotal();
+            $movimientos->save(); 
             
 
             // Limpia el carrito después de la compra.         
@@ -316,7 +418,7 @@ class VentaCabeceras extends Component
     
     public function resetUI()
     {   
-        $this->cliente_id = null;     
+        $this->cliente_id = '4';     
         $this->documento = 'Boleta';
         $this->num_documento = $this->loadNumeroDocumento();
         $this->tipoPago = " ";
@@ -326,6 +428,9 @@ class VentaCabeceras extends Component
         $this->precios = [];
         $this->totalCompra=" ";        
         $this->pagoEfectivo = 0;
+        $this->pagoEfectivo2 = 0;
+        $this->pagoTarjeta2 = 0;
+        $this->pagoTransferencia2= 0;
         $this->resetValidation();      
 
     }

@@ -49,6 +49,7 @@ class HistorialProductos extends Component
                     ->where('historiales.almacen_id', '=', $this->almacen_id)
                     ->whereDate('created_at', $this->fechaSeleccionada)
                     ->where('tipo', 'like', '%'.$this->buscar.'%')
+                    ->orWhere('motivo', 'like', '%'.$this->buscar.'%')
                     ->select('historiales.*')
                     ->orderBy('created_at', 'desc')
                     ->paginate($this->paginacion);

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('codigoproducto');
             $table->integer('cantidad');
             $table->float('total_venta', 8, 2);
-            $table->time('fecha_venta');
+            //$table->time('fecha_venta');
             $table->timestamps();
         });
     }

@@ -2,8 +2,8 @@
     <nav id="topbar">
         <ul class="list-unstyled menu-categories" id="topAccordion">
 
-            <li class="menu single-menu">
-                <a href="{{ url('/ventas') }}" >
+            <li class="menu single-menu active">
+                <a href="{{ url('/ventas') }}">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -17,7 +17,7 @@
             </li>
 
             <li class="menu single-menu">
-                <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
+                <a href="#productos" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle autodroprown">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -36,7 +36,7 @@
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </a>
-                <ul class="collapse submenu list-unstyled" id="menu2" data-parent="#topAccordion">
+                <ul class="collapse submenu list-unstyled" id="productos" data-parent="#topAccordion">
                     <li>
                         <a href="{{ url('/productos') }}"> Productos </a>
                     </li>
@@ -58,7 +58,7 @@
                 </ul>
             </li>
             <li class="menu single-menu">
-                <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
+                <a href="#compras" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle autodroprown">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -74,7 +74,7 @@
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </a>
-                <ul class="collapse submenu list-unstyled" id="menu1" data-parent="#topAccordion">
+                <ul class="collapse submenu list-unstyled" id="compras" data-parent="#topAccordion">
                     <li>
                         <a href="{{ url('/compras') }}"> Compras </a>
                     </li>
@@ -84,7 +84,8 @@
                 </ul>
             </li>
             <li class="menu single-menu">
-                <a href="#menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle autodroprown">
+                <a href="#administracion" data-toggle="collapse" aria-expanded="true"
+                    class="dropdown-toggle autodroprown">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -100,7 +101,7 @@
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </a>
-                <ul class="collapse submenu list-unstyled" id="menu1" data-parent="#topAccordion">
+                <ul class="collapse submenu list-unstyled" id="administracion" data-parent="#topAccordion">
                     <li>
                         <a href="{{ url('/empresas') }}"> Empresas </a>
                     </li>
@@ -119,7 +120,7 @@
                 </ul>
             </li>
             <li class="menu single-menu">
-                <a href="{{ url('/cajas') }}" >
+                <a href="{{ url('/cajas') }}">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

@@ -39,6 +39,7 @@
                                                     <th>Producto</th>
                                                     <th class="text-center">Precio Venta</th>
                                                     <th class="text-center">Cantidad</th>
+                                                    <th class="text-center">Stock</th>
                                                     <th class="text-center">Opciones</th>
                                                 </tr>
                                             </thead>
@@ -49,8 +50,8 @@
                                                             <p>{{ $item['nombre'] }}</p>
                                                         </td>
                                                         <td class="fs-6 text-center">
-                                                            <p wire:model.lazy="precios.{{ $indice }}">$
-                                                                {{ $precios[$indice] }}</p>
+                                                            <p wire:model.lazy="carrito.{{ $indice }}.precios">$
+                                                                {{ $item['precios'] }}</p>
 
                                                             {{-- <input class="form-control text-center" type="number"
                                                                 aria-label="Disabled" disabled
@@ -59,7 +60,11 @@
                                                         </td>
                                                         <td style="width: 12%">
                                                             <input class="form-control text-center" type="number"
-                                                                wire:model.lazy="cantidades.{{ $indice }}">
+                                                                wire:model.lazy="carrito.{{ $indice }}.cantidades">
+                                                        </td>
+                                                        <td class="fs-6 text-center">
+                                                            <p>{{ $this->obtenerStockDisponible($item['producto_id']) }}
+                                                            </p>
                                                         </td>
                                                         <td class="text-center">
                                                             <button class="btn btn-danger" type="button"
@@ -68,7 +73,7 @@
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="4" class="text-center">AGREGA PRODUCTOS A LA
+                                                        <td colspan="5" class="text-center">AGREGA PRODUCTOS A LA
                                                             VENTA</td>
                                                     </tr>
                                                 @endforelse
@@ -87,7 +92,7 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="input-group-sm mb-2">
-                                                <label>Nro. Documento</label>
+                                                <label>Nro. de Documento</label>
                                                 <span><strong>{{ $numeroDocumento }}</strong></span>
                                             </div>
                                             <div class="row mb-2">
@@ -96,7 +101,8 @@
                                                     @error('cliente_id')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="cliente_id" wire:model="cliente_id">
+                                                    <select class="form-select form-select-sm cliente_id"
+                                                        wire:model="cliente_id">
                                                         <option value="">Seleccione un cliente</option>
                                                         @foreach ($clientes as $cliente)
                                                             <option value="{{ $cliente->id }}">
@@ -136,13 +142,44 @@
                                                     <div class="mb-2">
                                                         <label>Efectivo Recibido</label>
                                                         <input class="form-control form-control-sm" type="number"
-                                                            wire:model="pagoEfectivo"
+                                                            wire:model="pagoEfectivo" placeholder="0"
                                                             onkeypress='return validaNumericos(event)'>
                                                     </div>
-                                                    <div class="mt-2">
-                                                        <h3 style="color: #d11616;">Vuelto : $
+                                                    <div class="text-center mt-2">
+                                                        <h3>Vuelto: $
+                                                            @if($pagoEfectivo < $total)
+                                                            0
+                                                            @else
+                                                            {{ number_format($vuelto, 0, ',', '.') }}
+                                                            @endif
+                                                        </h3>
+                                                    </div>
+                                                @endif
+                                                @if ($tipoPago === 'Mixto')
+                                                    <div class="mb-2">
+                                                        <div class="mb-2">
+                                                            <label>Efectivo Recibido</label>
+                                                            <input class="form-control form-control-sm" type="number"
+                                                                wire:model="pagoEfectivo2" placeholder= 0 value="0"
+                                                                onkeypress='return validaNumericos(event)'>
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <label>Tarjeta</label>
+                                                            <input class="form-control form-control-sm" type="number"
+                                                                wire:model="pagoTarjeta2" placeholder=0 value="0"
+                                                                onkeypress='return validaNumericos(event)'>
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <label>Transferencia</label>
+                                                            <input class="form-control form-control-sm" type="number"
+                                                                wire:model="pagoTransferencia2" placeholder=0 value="0"
+                                                                onkeypress='return validaNumericos(event)'>
+                                                        </div>
+                                                        <div class="text-center mt-2">
+                                                        <h3>Por Cobrar : $
                                                             {{ number_format($vuelto, 0, ',', '.') }}
                                                         </h3>
+                                                    </div>
                                                     </div>
                                                 @endif
 
@@ -195,22 +232,17 @@
             $('.cliente_id').select2({
                 minimumInputLength: 2,
                 width: '100%',
-
-                language: {
-                    inputTooShort: function() {
-                        return "Ingrese 2 o mas caracteres";
-                    }
-                }
             });
 
+            $.fn.select2.defaults.set('language', 'es');
+
             $('#btnReset').click(function() {
-                $(".cliente_id").val(null).trigger("change");
+                $(".cliente_id").val('4').trigger("change");
             });
 
             $('.reset2').click(function() {
-                $(".cliente_id").val(null).trigger("change");
+                $(".cliente_id").val('4').trigger("change");
             });
-
 
             $('.cliente_id').on('change', function() {
                 @this.set('cliente_id', this.value);
