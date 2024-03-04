@@ -30,8 +30,8 @@ return new class extends Migration
             $table->float('delivery', 8, 2);
             $table->float('total_venta', 8, 2);
             $table->string('tipo_pago');
-            $table->integer('estado');
-            $table->time('fecha_venta');
+            //$table->integer('estado');
+            //$table->time('fecha_venta');
             $table->timestamps();
         });
     }

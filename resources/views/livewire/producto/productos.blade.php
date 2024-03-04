@@ -76,9 +76,7 @@
         @include('livewire.producto.form')
         @include('livewire.producto.form-cargamasiva')
     </div>
-</div>
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
@@ -143,3 +141,6 @@
 
     }
 </script>
+</div>
+
+

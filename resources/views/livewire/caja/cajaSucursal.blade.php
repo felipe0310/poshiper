@@ -100,9 +100,7 @@
         @include('livewire.caja.form-egreso')
         @include('livewire.caja.form-apertura')
     </div>
-</div>
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('modal-show-apertura', msg => {
@@ -162,3 +160,6 @@
         })
     }
 </script>
+</div>
+
+

@@ -83,9 +83,7 @@
         @include('livewire.inventario.form-restar')
         @include('livewire.inventario.form-edit')
     </div>
-</div>
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
@@ -191,3 +189,6 @@
         })
     }
 </script>
+
+</div>
+

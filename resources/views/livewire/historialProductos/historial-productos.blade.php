@@ -17,8 +17,8 @@
                         <h5 class="col-lg-9">Sucursal : {{ $sucursalNombre }} </h5>
                         <div class="col-lg-1">
                             <p>Selecciona una fecha</p>
-                        </div>                        
-                        <input type="date" class="form-control col-lg-2" wire:model="fechaSeleccionada">                             
+                        </div>
+                        <input type="date" class="form-control col-lg-2" wire:model="fechaSeleccionada">
                     </div>
                     <div class="table-responsive">
                         @include('common.searchbox')
@@ -26,12 +26,12 @@
                             <thead>
                                 <tr>
                                     <th>Descripcion</th>
-                                    <th class="text-center">Motivo</th>                                    
+                                    <th class="text-center">Motivo</th>
                                     <th class="text-center">Tipo</th>
                                     <th class="text-center">Cantidad</th>
                                     <th class="text-center">Habia</th>
                                     <th class="text-center">Hay</th>
-                                    <th class="text-center">Fecha</th>                                    
+                                    <th class="text-center">Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,10 +40,10 @@
                                         <td>{{ $data->productos->descripcion }}</td>
                                         <td class="text-center">{{ $data->motivo }}</td>
                                         <td class="text-center">{{ $data->tipo }}</td>
-                                        <td class="text-center">{{ $data->cantidad }}</td>                                        
+                                        <td class="text-center">{{ $data->cantidad }}</td>
                                         <td class="text-center">{{ $data->stock_antiguo }}</td>
                                         <td class="text-center">{{ $data->stock_nuevo }}</td>
-                                        <td class="text-center">{{ $data->created_at }}</td>                                        
+                                        <td class="text-center">{{ $data->created_at }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -55,28 +55,26 @@
         </div>
         {{-- @include('livewire.categoria.form') --}}
     </div>
-</div>
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('item-updated', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('item-delete', msg => {
-            
+
         })
 
         window.livewire.on('hide-modal', msg => {
             $('#theModal').modal('hide');
-            
+
         })
 
         window.livewire.on('show-modal', msg => {
@@ -90,7 +88,7 @@
     });
 
     function Confirm(id) {
-        
+
         swal.fire({
             title: 'CONFIRMAR',
             text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
@@ -108,3 +106,6 @@
 
     }
 </script>
+</div>
+
+

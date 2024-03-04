@@ -1,7 +1,7 @@
 <div>
     <div class="page-header">
         <div class="page-title">
-            <h3>Registrar Compras | Productos</h3>
+            <h3>Ventas</h3>
         </div>
     </div>
     <div class="row">
@@ -37,27 +37,31 @@
                                             <thead>
                                                 <tr>
                                                     <th>Producto</th>
+                                                    <th class="text-center">Precio Venta</th>
                                                     <th class="text-center">Cantidad</th>
-                                                    <th class="text-center">Precio Compra</th>
                                                     <th class="text-center">Opciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse ($carrito as $indice => $item)
                                                     <tr>
-                                                        <td style="width: 50%">
-                                                            <label>{{ $item['nombre'] }}</label>
+                                                        <td class="fs-6" style="width: 50%">
+                                                            <p>{{ $item['nombre'] }}</p>
                                                         </td>
-                                                        <td>
+                                                        <td class="fs-6 text-center">
+                                                            <p wire:model.lazy="precios.{{ $indice }}">$
+                                                                {{ $precios[$indice] }}</p>
+
+                                                            {{-- <input class="form-control text-center" type="number"
+                                                                aria-label="Disabled" disabled
+                                                                wire:model.lazy="precios.{{ $indice }}"
+                                                                value="{{ $precios[$indice] }}"> --}}
+                                                        </td>
+                                                        <td style="width: 12%">
                                                             <input class="form-control text-center" type="number"
                                                                 wire:model.lazy="cantidades.{{ $indice }}">
                                                         </td>
-                                                        <td>
-                                                            <input class="form-control text-center" type="number"
-                                                                wire:model.lazy="precios.{{ $indice }}"
-                                                                value="{{ $precios[$indice] }}">
-                                                        </td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <button class="btn btn-danger" type="button"
                                                                 onClick="Confirm({{ $indice }})">Eliminar</button>
                                                         </td>
@@ -65,7 +69,7 @@
                                                 @empty
                                                     <tr>
                                                         <td colspan="4" class="text-center">AGREGA PRODUCTOS A LA
-                                                            COMPRA</td>
+                                                            VENTA</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -76,23 +80,27 @@
                                     <div class="card">
                                         <div class="card-header" style="background: #4361ee">
                                             <div class="card-title text-center">
-                                                <h3 style="color: #ebe3e3;">Total Compra : $
+                                                <h3 style="color: #ebe3e3;">Total Venta : $
                                                     {{ number_format($total, 0, ',', '.') }}
                                                 </h3>
                                             </div>
                                         </div>
                                         <div class="card-body">
+                                            <div class="input-group-sm mb-2">
+                                                <label>Nro. Documento</label>
+                                                <span><strong>{{ $numeroDocumento }}</strong></span>
+                                            </div>
                                             <div class="row mb-2">
-                                                <div class="mb-2">
-                                                    <label>Proveedor</label>
-                                                    @error('proveedor_id')
+                                                <div class="mb-2" wire:ignore>
+                                                    <label>Cliente</label>
+                                                    @error('cliente_id')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="form-select" wire:model="proveedor_id">
-                                                        <option value="">Selecciona un proveedor</option>
-                                                        @foreach ($proveedores as $proveedor)
-                                                            <option value="{{ $proveedor->id }}">
-                                                                {{ $proveedor->nombre }}
+                                                    <select class="cliente_id" wire:model="cliente_id">
+                                                        <option value="">Seleccione un cliente</option>
+                                                        @foreach ($clientes as $cliente)
+                                                            <option value="{{ $cliente->id }}">
+                                                                {{ $cliente->nombre . ' ' . $cliente->apellido }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -102,38 +110,48 @@
                                                     @error('documento')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="form-select" wire:model="documento">
-                                                        <option>Selecciona un documento</option>
-                                                        <option>Factura</option>
-                                                        <option>Boleta</option>
+                                                    <select class="form-select form-select-sm" wire:model="documento">
+                                                        @foreach ($docAlmacenes as $docAlmacen)
+                                                            <option value="{{ $docAlmacen->documento }}">
+                                                                {{ $docAlmacen->documento }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
-
-                                                <div class="input-group-sm mb-2">
-                                                    <label>Nro. Documento</label>
-                                                    @error('num_documento')
-                                                        <span class="text-danger er">{{ $message }}</span>
-                                                    @enderror
-                                                    <input wire:model="num_documento" type="text"
-                                                        class="form-control sm">
-                                                </div>
-
                                                 <div class="mb-2">
                                                     <label>Forma de Pago</label>
                                                     @error('tipoPago')
                                                         <span class="text-danger er">{{ $message }}</span>
                                                     @enderror
-                                                    <select class="form-select" wire:model="tipoPago">
-                                                        <option>Selecciona tipo de pago</option>
+                                                    <select class="form-select form-select-sm" wire:model="tipoPago">
+                                                        <option>Seleccione Forma de Pago</option>
                                                         <option>Efectivo</option>
-                                                        <option>Crédito</option>
+                                                        <option>Tarjeta</option>
+                                                        <option>Transferencia</option>
+                                                        <option value="Credito">Crédito</option>
+                                                        <option>Mixto</option>
                                                     </select>
                                                 </div>
+                                                @if ($tipoPago === 'Efectivo')
+                                                    <div class="mb-2">
+                                                        <label>Efectivo Recibido</label>
+                                                        <input class="form-control form-control-sm" type="number"
+                                                            wire:model="pagoEfectivo"
+                                                            onkeypress='return validaNumericos(event)'>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <h3 style="color: #d11616;">Vuelto : $
+                                                            {{ number_format($vuelto, 0, ',', '.') }}
+                                                        </h3>
+                                                    </div>
+                                                @endif
 
                                             </div>
-                                            <button class="btn btn-info" wire:click.prevent="realizarCompra">Realizar la
-                                                Compra</button>
-                                            <button class="btn btn-danger float-end" wire:click.prevent="resetUI">Vaciar
+                                            <button class="btn btn-info reset2"
+                                                wire:click.prevent="realizarVenta">Cobrar</button>
+
+                                            <button class="btn btn-danger float-end" id="btnReset"
+                                                wire:click.prevent="resetUI">Vaciar
                                                 Listado</button>
                                         </div>
                                     </div>
@@ -145,6 +163,7 @@
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             livewire.on('scan-code', action => {
@@ -152,7 +171,6 @@
             })
 
         });
-
 
         function Confirm(id) {
             swal.fire({
@@ -170,5 +188,34 @@
                 }
             })
         };
+    </script>
+
+    <script>
+        document.addEventListener('livewire:load', function() {
+            $('.cliente_id').select2({
+                minimumInputLength: 2,
+                width: '100%',
+
+                language: {
+                    inputTooShort: function() {
+                        return "Ingrese 2 o mas caracteres";
+                    }
+                }
+            });
+
+            $('#btnReset').click(function() {
+                $(".cliente_id").val(null).trigger("change");
+            });
+
+            $('.reset2').click(function() {
+                $(".cliente_id").val(null).trigger("change");
+            });
+
+
+            $('.cliente_id').on('change', function() {
+                @this.set('cliente_id', this.value);
+            });
+
+        });
     </script>
 </div>

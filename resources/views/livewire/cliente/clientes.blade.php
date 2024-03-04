@@ -62,8 +62,7 @@
         </div>
         @include('livewire.cliente.form')
     </div>
-</div>
-
+    
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -121,3 +120,5 @@
 
     }
 </script>
+</div>
+

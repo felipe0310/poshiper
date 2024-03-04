@@ -140,10 +140,7 @@
             </div>
         </div>
     </div>
-</div>
-
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
         livewire.on('scan-code', action => {
             $('#code').val('')
@@ -168,3 +165,7 @@
         })
     };
 </script>
+</div>
+
+
+

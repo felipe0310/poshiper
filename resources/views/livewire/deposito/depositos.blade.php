@@ -73,113 +73,112 @@
         @include('livewire.deposito.form-restar')
         @include('livewire.deposito.form-edit')
     </div>
-</div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        window.livewire.on('item-added', msg => {
-            $('#theModal').modal('hide');
-        })
-
-        window.livewire.on('item-updated', msg => {
-            $('#theModal').modal('hide');
-        })
-
-        window.livewire.on('item-delete', msg => {})
-
-        window.livewire.on('hide-modal', msg => {
-            $('#theModal').modal('hide');
-        })
-
-        window.livewire.on('modal-show', msg => {
-            $('#theModal').modal('show')
-        })
-
-        $('#theModal').on('hidden.modal', function(e) {
-            $('.er').css('display', 'none');
-        })
-
-        window.livewire.on('modal-show-traslado', msg => {
-            $('#trasladoModal').modal('show')
-        })
-
-        window.livewire.on('item-traslado', msg => {
-            $('#trasladoModal').modal('hide');
-        })
-
-        $('#trasladoModal').on('hidden.modal', function(e) {
-            $('.er').css('display', 'none');
-        })
-
-        window.livewire.on('modal-show-sumar', msg => {
-            $('#sumarModal').modal('show')
-        })
-
-        window.livewire.on('item-sumar', msg => {
-            $('#sumarModal').modal('hide');
-
-        })
-
-        $('#sumarModal').on('hidden.modal', function(e) {
-            $('.er').css('display', 'none');
-        })
-
-        window.livewire.on('modal-show-restar', msg => {
-            $('#restarModal').modal('show')
-        })
-
-        window.livewire.on('item-restar', msg => {
-            $('#restarModal').modal('hide');
-        })
-
-        $('#restarModal').on('hidden.modal', function(e) {
-            $('.er').css('display', 'none');
-        })
-
-        window.livewire.on('modal-show-editar', msg => {
-            $('#editarModal').modal('show')
-        })
-
-        window.livewire.on('item-editar', msg => {
-            $('#editarModal').modal('hide');
-        })
-
-        $('#editarModal').on('hidden.modal', function(e) {
-            $('.er').css('display', 'none');
-        })
-
-    });
-
-    document.addEventListener('livewire:load', function() {
-        Livewire.on('refreshComponent', function() {
-            Livewire.refresh();
-        });
-    });
-
-    function Confirm(id, stock) {
-        if (stock > 0) {
-            swal.fire({
-                title: 'NO SE PUEDE ELIMINAR EL PRODUCTO PORQUE TIENE STOCK DISPONIBLE',
-                icon: 'error'
+            window.livewire.on('item-added', msg => {
+                $('#theModal').modal('hide');
             })
-            return;
-        }
-        swal.fire({
-            title: 'CONFIRMAR',
-            text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
-            icon: 'warning',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            confirmButtonText: 'Aceptar'
 
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('deleteRow', id)
-                swal.close()
+            window.livewire.on('item-updated', msg => {
+                $('#theModal').modal('hide');
+            })
+
+            window.livewire.on('item-delete', msg => {})
+
+            window.livewire.on('hide-modal', msg => {
+                $('#theModal').modal('hide');
+            })
+
+            window.livewire.on('modal-show', msg => {
+                $('#theModal').modal('show')
+            })
+
+            $('#theModal').on('hidden.modal', function(e) {
+                $('.er').css('display', 'none');
+            })
+
+            window.livewire.on('modal-show-traslado', msg => {
+                $('#trasladoModal').modal('show')
+            })
+
+            window.livewire.on('item-traslado', msg => {
+                $('#trasladoModal').modal('hide');
+            })
+
+            $('#trasladoModal').on('hidden.modal', function(e) {
+                $('.er').css('display', 'none');
+            })
+
+            window.livewire.on('modal-show-sumar', msg => {
+                $('#sumarModal').modal('show')
+            })
+
+            window.livewire.on('item-sumar', msg => {
+                $('#sumarModal').modal('hide');
+
+            })
+
+            $('#sumarModal').on('hidden.modal', function(e) {
+                $('.er').css('display', 'none');
+            })
+
+            window.livewire.on('modal-show-restar', msg => {
+                $('#restarModal').modal('show')
+            })
+
+            window.livewire.on('item-restar', msg => {
+                $('#restarModal').modal('hide');
+            })
+
+            $('#restarModal').on('hidden.modal', function(e) {
+                $('.er').css('display', 'none');
+            })
+
+            window.livewire.on('modal-show-editar', msg => {
+                $('#editarModal').modal('show')
+            })
+
+            window.livewire.on('item-editar', msg => {
+                $('#editarModal').modal('hide');
+            })
+
+            $('#editarModal').on('hidden.modal', function(e) {
+                $('.er').css('display', 'none');
+            })
+
+        });
+
+        document.addEventListener('livewire:load', function() {
+            Livewire.on('refreshComponent', function() {
+                Livewire.refresh();
+            });
+        });
+
+        function Confirm(id, stock) {
+            if (stock > 0) {
+                swal.fire({
+                    title: 'NO SE PUEDE ELIMINAR EL PRODUCTO PORQUE TIENE STOCK DISPONIBLE',
+                    icon: 'error'
+                })
+                return;
             }
-        })
+            swal.fire({
+                title: 'CONFIRMAR',
+                text: '¿CONFIRMAS ELIMINAR EL REGISTRO?',
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar',
+                confirmButtonText: 'Aceptar'
 
-    }
-</script>
+            }).then(function(result) {
+                if (result.value) {
+                    window.livewire.emit('deleteRow', id)
+                    swal.close()
+                }
+            })
+
+        }
+    </script>
+</div>

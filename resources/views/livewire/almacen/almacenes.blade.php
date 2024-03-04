@@ -57,9 +57,7 @@
         </div>
         @include('livewire.almacen.form')
     </div>
-</div>
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
@@ -116,3 +114,6 @@
 
     }
 </script>
+</div>
+
+

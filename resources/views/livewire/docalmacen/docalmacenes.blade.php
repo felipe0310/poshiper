@@ -54,9 +54,7 @@
         </div>
         @include('livewire.docalmacen.form')
     </div>
-</div>
-
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('item-added', msg => {
@@ -107,3 +105,6 @@
 
     }
 </script>
+</div>
+
+
