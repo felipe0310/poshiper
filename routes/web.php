@@ -1,7 +1,7 @@
 <?php
 
-
 use App\Http\Livewire\Cajas;
+use App\Http\Livewire\Cambios;
 use App\Http\Livewire\Compras;
 use App\Http\Livewire\Clientes;
 use App\Http\Livewire\Empresas;
@@ -16,14 +16,15 @@ use App\Http\Livewire\Proveedores;
 use App\Http\Livewire\CajaSucursal;
 use App\Http\Livewire\DocAlmacenes;
 use App\Http\Livewire\VentaSucursal;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Livewire\DetalleCompras;
 use App\Http\Livewire\VentaCabeceras;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\CambiosSucursal;
 use App\Http\Livewire\MovimientoCajas;
 use App\Http\Livewire\HistorialProductos;
 use App\Http\Livewire\InventarioSucursal;
 use App\Http\Livewire\HistorialProductoAlmacen;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,8 @@ Route::get('/comprasDetalle', DetalleCompras::class);
 Route::get('/comprasEdit/{id}', EditCompras::class);
 Route::get('/cajas', Cajas::class);
 Route::get('/caja/{id}', CajaSucursal::class);
+Route::get('/cambios', Cambios::class);
+Route::get('/cambio/{id}', CambiosSucursal::class);
 Route::get('/movimientoCaja/{id}', MovimientoCajas::class);
 Route::get('/historialProducto', HistorialProductoAlmacen::class);
 Route::get('/historialProductos/{id}', HistorialProductos::class);
